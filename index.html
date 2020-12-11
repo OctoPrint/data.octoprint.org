@@ -3,6 +3,9 @@
   <head><script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
   </head>
   <body>
+    <noscript>
+      Sorry, this site needs JavaScript to work.
+    </noscript>
     <script>
       // 99% of this page is built in JavaScript DOM on purpose.
       // It is not designed to work in all browsers (but might anyway).
@@ -119,12 +122,15 @@
       document.body.style.color = '#ffffff';
       document.body.style.backgroundColor = '#000000';
 
+      var footer = document.body.insertBefore(document.createElement('footer'), document.body.firstChild);
       var dataSpan = document.body.insertBefore(document.createElement('span'), document.body.firstChild);
-      var header = document.body.insertBefore(document.createElement('header'), document.body.firstChild);
+      var header = document.body.insertBefore(document.createElement('h1'), document.body.firstChild);
       header.id = 'DataHeader';
       dataSpan.id = 'DataCharts';
       dataSpan.height = '100%';
       dataSpan.width = '100%';
+      footer.id = 'DataFooter';
+      footer.textContent = "Generated based on data collected via the Anonymous Usage Tracking plugin in OctoPrint (see tracking.octoprint.org). Sources at github.com/OctoPrint/data.octoprint.org. Underlying exports at data.octoprint.org/export/."
 
       var OctoData;  // Stores JSON data
 
@@ -137,6 +143,7 @@
       var cellP07 = document.createElement('td');
       var cellV30 = document.createElement('td');
       var cellV07 = document.createElement('td');
+      var footer = document.createElement('footer');
 
       const BASE = "https://data.octoprint.org/export";
       //const BASE = ".";
@@ -156,7 +163,7 @@
       }
 
       function rebuildPage() {
-        mytitle.textContent = "OctoPrint Anonymous Usage Data";
+        mytitle.textContent = header.textContent = "OctoPrint Anonymous Usage Data";
         masterTable.id = 'chartTable';
         row1.id = 'row1';
         row2.id = 'row2';
@@ -176,6 +183,8 @@
         createVersionCharts("/instance_stats_7d.json", "V7", "OctoPrint version distribution, 7 days", "Unique instance per hour, 7 days", cellV07);
         createPythonCharts("/python_stats_30d.json", "P30", "Python version Distribution, 30 days", "Python 2 vs 3, 30 days", cellP30);
         createPythonCharts("/python_stats_7d.json", "P7", "Python version distribution, 7 days", "Python 2 vs 3, 7 days", cellP07);
+
+
       }
 
       function createVersionCharts(source, id, titlePie, titleLine, cell) {
