@@ -130,7 +130,10 @@
       dataSpan.height = '100%';
       dataSpan.width = '100%';
       footer.id = 'DataFooter';
-      footer.textContent = "Generated based on data collected via the Anonymous Usage Tracking plugin in OctoPrint (see tracking.octoprint.org). Sources at github.com/OctoPrint/data.octoprint.org. Underlying exports at data.octoprint.org/export/."
+      footer.innerHTML = "Generated based on data collected via the Anonymous Usage Tracking plugin in OctoPrint " + 
+        "(see <a href='http://tracking.octoprint.org'>tracking.octoprint.org</a>). " + 
+        "Sources at <a href='http://github.com/OctoPrint/data.octoprint.org'>github.com/OctoPrint/data.octoprint.org</a>. " + 
+        "Underlying exports at <a href='http://data.octoprint.org/export/'>data.octoprint.org/export/</a>.";
 
       addCSSRule('h1', 'text-align: center');
       addCSSRule('footer', 'text-align: center');
