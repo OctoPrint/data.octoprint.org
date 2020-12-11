@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+  <head><script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <script>
+      // 99% of this page is built in JavaScript DOM on purpose.
+      // It is not designed to work in all browsers (but might anyway).
+      // I primarily used this in Google Chrome from a file:// link
+      //   which doesn't allow cookies to work.
+      // Much of this script's code was taken as inspiration from
+      //   stackoverflow.com and w3schools.com
+      // Any bugs can be reported to ayourk@gmail.com
+      //   with the subject "OctoPrint Data JSON parser".
+      // All others will be ignored/reported as spam.
+      //
+      // Copyright (C) Aaron Yourk 2020  All Rights Reserved.
+      // Special permission is hereby granted to Gina Häußge <gina@octoprint.org>
+      //   for this work to be used in any works she creates as long as
+      //   this copyright notice remains intact.
+
+      if (!CSSRuleList.prototype.hasOwnProperty("last")){
+        Object.defineProperty(CSSRuleList.prototype, "last", {
+          get() { return this[this.length - 1]; }
+        });
+      };
+      function isJSONvalid(str) {
+        try { JSON.parse(str); }
+        catch (e) { return false; }
+        return true;
+      }
+      var mytitle = document.head.appendChild(document.createElement('title'));
+//      var {sheet} = Object.assign(document.head.appendChild(document.createElement('style'), {type: 'text/css'}));
+      var somesheet = (function() {
+        var style = document.createElement("style");
+        style.appendChild(document.createTextNode(""));
+        document.head.appendChild(style);
+        return style.sheet;
+      })();
+      function addCSSRule(selector, rules, cursheet = document.styleSheets[0], index=0) {
+        if("insertRule" in cursheet) {
+          cursheet.insertRule(selector + "{" + rules + "}", index);
+          return cursheet.cssRules[0].style;
+        } else if("addRule" in cursheet) {
+          cursheet.addRule(selector, rules, index);
+          return cursheet.rules[0].style;
+        }
+      }
+
+      // This function doesn't work as intended and needs fixing: TODO
+      function JSONfetch(jsurl) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", jsurl, false);
+        xmlhttp.send(null);
+        return xmlhttp.responseText;
+      }
+
+      // Dynamically created style sheet
+      var styleBody = addCSSRule('html, body', 'padding: 0px;');
+      styleBody.font = 'normal 12px "Tahoma" , Arial, Helvetica, sans-serif';
+//      styleBody.color = '#dadada';
+//      styleBody.backgroundColor = '#161616';
+      styleBody.lineHeight = '18px';
+      styleBody.display = 'block';
+      var styleContainer = addCSSRule('.container', 'position: relative;');
+      styleContainer.width = '100%';
+      styleContainer.paddingBottom = '56.25%';
+      var styleLabel = addCSSRule('.lbl', 'float: left;');
+      styleLabel.padding = '2px 15px';
+      styleLabel.textAlign = 'right';
+      styleLabel.fontSize = '14px';
+      var styleNav = addCSSRule('.lbl', 'float: left;');
+      styleNav.border = 0;
+      styleNav.float = 'left';
+      styleNav.paddingLeft = '20px';
+      styleNav.lineHeight = '23px';
+      styleNav.margin = 'auto';
+      styleNav.fontSize = '12px';
+      var styleSelect = addCSSRule('select', '');
+      styleSelect.float = 'left';
+      styleSelect.border = '1px solid #666666';
+      styleSelect.color = '#cccccc';
+      styleSelect.backgroundColor = '#393939';
+      styleSelect.fontSize = '15px';
+      var styleClearHover = addCSSRule('a.clear:hover', 'text-decoration: none;');
+      var styleClearLink = addCSSRule('a.clear:link', 'text-decoration: none;');
+      var styleClearVisited = addCSSRule('a.clear:visited', 'text-decoration: none;');
+      var styleClearActive = addCSSRule('a.clear:active', 'text-decoration: none;');
+      styleClearLink.color = 'yellow';
+      styleClearLink.backgroundColor = 'black';
+      styleClearLink.border = '2px solid yellow';
+      styleClearLink.padding = '5px 10px';
+      styleClearLink.textAlign = 'center';
+      styleClearLink.display = 'inline';
+      styleClearLink.marginLeft = '20px';
+      styleClearVisited.color = 'yellow';
+      styleClearVisited.backgroundColor = 'black';
+      styleClearVisited.border = '2px solid yellow';
+      styleClearVisited.padding = '5px 10px';
+      styleClearVisited.textAlign = 'center';
+      styleClearVisited.display = 'inline';
+      styleClearVisited.marginLeft = '20px';
+      styleClearHover.color = 'black';
+      styleClearHover.backgroundColor = 'yellow';
+      styleClearHover.border = '2px solid yellow';
+      styleClearHover.padding = '5px 10px';
+      styleClearHover.textAlign = 'center';
+      styleClearHover.display = 'inline';
+      styleClearHover.marginLeft = '20px';
+      styleClearActive.color = 'black';
+      styleClearActive.backgroundColor = 'yellow';
+      styleClearActive.border = '2px solid yellow';
+      styleClearActive.padding = '5px 10px';
+      styleClearActive.textAlign = 'center';
+      styleClearActive.display = 'inline';
+      styleClearActive.marginLeft = '20px';
+      var placeholderStyle = addCSSRule('::placeholder', 'color: #7f7f7f;');
+
+      document.body.style.color = '#ffffff';
+      document.body.style.backgroundColor = '#000000';
+
+      var dataSpan = document.body.insertBefore(document.createElement('span'), document.body.firstChild);
+      var header = document.body.insertBefore(document.createElement('header'), document.body.firstChild);
+      header.id = 'DataHeader';
+      dataSpan.id = 'DataCharts';
+      dataSpan.height = '100%';
+      dataSpan.width = '100%';
+
+      var OctoData;  // Stores JSON data
+
+</script>
+<script>
+      var masterTable = document.createElement('table');
+      var row1 = document.createElement('tr');
+      var row2 = document.createElement('tr');
+      var cellP30 = document.createElement('td');
+      var cellP07 = document.createElement('td');
+      var cellV30 = document.createElement('td');
+      var cellV07 = document.createElement('td');
+
+      const BASE = "https://data.octoprint.org/export";
+      //const BASE = ".";
+
+      rebuildPage();
+
+      function pyinst(item) {
+        var valno = item.instances;
+        return valno;
+      }
+
+      function DateJSON2plotly(jsdate) {
+        var td = new Date(jsdate);
+        var dateStr = "" + td.getUTCFullYear() + '-' + zeropad(td.getUTCMonth() + 1,10) + '-' + zeropad(td.getUTCDate(),10) + ' ' +
+                 zeropad(td.getUTCHours(),10) + ':' + zeropad(td.getUTCMinutes(),10) + ':' + zeropad(td.getUTCSeconds(),10);
+        return dateStr;
+      }
+
+      function rebuildPage() {
+        mytitle.textContent = "OctoPrint Anonymous Usage Data";
+        masterTable.id = 'chartTable';
+        row1.id = 'row1';
+        row2.id = 'row2';
+        cellP30.id = 'cellP30';
+        cellP07.id = 'cellP07';
+        cellV30.id = 'cellV30';
+        cellV07.id = 'cellV07';
+        row1.appendChild(cellV30);
+        row1.appendChild(cellV07);
+        row2.appendChild(cellP30);
+        row2.appendChild(cellP07);
+        masterTable.appendChild(row1);
+        masterTable.appendChild(row2);
+        dataSpan.appendChild(masterTable);
+
+        createVersionCharts("/instance_stats_30d.json", "V30", "OctoPrint version distribution, 30 days", "Unique instances per hour, 30 days", cellV30);
+        createVersionCharts("/instance_stats_7d.json", "V7", "OctoPrint version distribution, 7 days", "Unique instance per hour, 7 days", cellV07);
+        createPythonCharts("/python_stats_30d.json", "P30", "Python version Distribution, 30 days", "Python 2 vs 3, 30 days", cellP30);
+        createPythonCharts("/python_stats_7d.json", "P7", "Python version distribution, 7 days", "Python 2 vs 3, 7 days", cellP07);
+      }
+
+      function createVersionCharts(source, id, titlePie, titleLine, cell) {
+        var jsonUrl = BASE + source;
+        var jsdata = JSONfetch(jsonUrl);
+        var OctoData = (jsdata != "" && isJSONvalid(jsdata)) ? JSON.parse(jsdata) : "";
+        
+        var LastUpdate = new Date(OctoData._since);
+        var LastUpdateDiv = document.createElement('h3');
+        LastUpdateDiv.id = "LastUpdate" + id;
+        LastUpdateDiv.name = "LastUpdate" + id;
+        LastUpdateDiv.style.color = '#333333';
+        LastUpdateDiv.style.textAlign = 'right';
+        LastUpdateDiv.textContent = "LastUpdate: " + LastUpdate.toString();
+
+        // Build 30-Day Version Distribution Pie chart:
+        var OctoVers = OctoData.versions;
+        var PieData = [{
+          values: Object.values(OctoVers),
+          labels: Object.keys(OctoVers),
+          direction: "clockwise",
+          position: "top center",
+//          rotation: 180,
+          hole: 0.4,
+          outsidetextfont: {
+            color: "#000"
+          },
+          type: 'pie'
+        }];
+        var PieLayout = {
+          legend: {
+            orientation: "v",
+          },
+          title: {
+            text: titlePie,
+            size: 30
+          },
+          annotations: [{
+            font: {
+              size: 30
+            },
+            showarrow: false,
+            text: "" + OctoData.count,
+            y: 0.5
+          }],
+          font: {
+            color: "#fff"
+          },
+          height: 600,
+          width: 853,
+          paper_bgcolor: "#000",
+          plot_bgcolor: "#000"
+        };
+        var PieCfg = {
+          toImageButtonOptions: {
+            format: 'svg',
+            filename: 'OctoPrintVersions'
+          },
+          responsive: true,
+          scrollZoom: true,
+          displayModeBar: true
+        };
+        var VerPieChart = document.createElement('div');
+        VerPieChart.id = 'PieChart' + id;
+
+        // Build 30-Day instance count Line chart:
+        var OctoHistory = OctoData.histogram;
+        var LineXkey = [];
+        var LineXval = [];
+        for (var curhist of OctoHistory) {
+          LineXkey.push(DateJSON2plotly(curhist["start"]));
+          LineXval.push(curhist["count"]);
+        }
+        // Strip off the extraneous data from the tail end:
+        LineXkey.pop();
+        LineXval.pop();
+        var LineData = [{
+          x: LineXkey,
+          y: LineXval,
+          name: 'Instances',
+          mode: "lines",
+          line: {
+            color: 'rgb(172, 172, 0)'
+          },
+          type: 'scatter'
+        }];
+        var LineLayout = {
+//          showlegend: false,
+          title: {
+            text: titleLine,
+            //size: 30
+          },
+          font: {
+            color: "#fff"
+          },
+          paper_bgcolor: "#000",
+          plot_bgcolor: "#333",
+          height: 300,
+          width: 853
+        };
+        var LineChart = document.createElement('div');
+        LineChart.id = 'lineChart' + id;
+
+        // Build the page with all of the charts:
+        cell.appendChild(LineChart);
+        cell.appendChild(VerPieChart);
+        cell.appendChild(LastUpdateDiv);
+        Plotly.newPlot('lineChart' + id, LineData, LineLayout);
+        Plotly.newPlot('PieChart' + id, PieData, PieLayout, PieCfg);
+      }
+
+      function createPythonCharts(source, id, titlePie, titleLine, cell) {
+        var jsonUrl = BASE + source;
+        var jsdata = JSONfetch(jsonUrl);   // Typically blocked by CORS; See https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf
+        var OctoData = (jsdata != "" && isJSONvalid(jsdata)) ? JSON.parse(jsdata) : "";
+        
+        var LastUpdate = new Date(OctoData._since);
+        var LastUpdateDiv = document.createElement('h3');
+        LastUpdateDiv.id = "LastUpdate";
+        LastUpdateDiv.name = "LastUpdate";
+        LastUpdateDiv.style.color = '#333333';
+        LastUpdateDiv.style.textAlign = 'right';
+        LastUpdateDiv.textContent = "LastUpdate: " + LastUpdate.toString();
+
+        var OctoVers = OctoData.versions;
+        var PieData = [{
+          labels: Object.keys(OctoVers),
+          values: Object.values(OctoVers).map(pyinst),
+          direction: "clockwise",
+          position: "top center",
+//          rotation: 180,
+          hole: 0.4,
+          outsidetextfont: {
+            color: "#000"
+          },
+          type: 'pie'
+        }];
+        var PieLayout = {
+          legend: {
+            orientation: "v",
+          },
+          title: {
+            text: titlePie,
+            size: 30
+          },
+          font: {
+            color: "#fff"
+          },
+          height: 600,
+          width: 853,
+          paper_bgcolor: "#000",
+          plot_bgcolor: "#000"
+        };
+        var PieCfg = {
+          toImageButtonOptions: {
+            format: 'svg',
+            filename: 'OctoPrintPyVersions'
+          },
+          responsive: true,
+          scrollZoom: true,
+          displayModeBar: true
+        };
+        var VerPieChart = document.createElement('div');
+        VerPieChart.id = 'PieChart' + id;
+
+        // Build 30-Day instance count Line chart:
+        var OctoHistory = OctoData.histogram;
+        var LineXkey = [];
+        var LineX2val = [];
+        var LineX3val = [];
+        for (var curhist of OctoHistory) {
+          LineXkey.push(DateJSON2plotly(curhist["start"]));
+          LineX2val.push(curhist["python2"]);
+          LineX3val.push(curhist["python3"]);
+        }
+        // Strip off the extraneous data from the tail end:
+        LineXkey.pop();
+        LineX2val.pop();
+        var LineData = [{
+          x: LineXkey,
+          y: LineX2val,
+          name: 'Python 2',
+          mode: "lines",
+          line: {
+            width: 6,
+            color: 'rgb(172, 0, 172)'
+          },
+          type: 'scatter'
+        },{
+          x: LineXkey,
+          y: LineX3val,
+          name: 'Python 3',
+          mode: "lines",
+          line: {
+            width: 5,
+            color: 'rgb(0, 172, 0)'
+          },
+          type: 'scatter'
+        }];
+        var LineLayout = {
+//          showlegend: false,
+          title: {
+            text: titleLine,
+            //size: 30
+          },
+          font: {
+            color: "#fff"
+          },
+          paper_bgcolor: "#000",
+          plot_bgcolor: "#333",
+          height: 300,
+          width: 853
+        };
+        var LineChart = document.createElement('div');
+        LineChart.id = 'lineChart' + id;
+
+        // Build the page with all of the charts:
+        cell.appendChild(LineChart);
+        cell.appendChild(VerPieChart);
+        cell.appendChild(LastUpdateDiv);
+        Plotly.newPlot('lineChart' + id, LineData, LineLayout);
+        Plotly.newPlot('PieChart' + id, PieData, PieLayout, PieCfg);
+      }
+
+      function zeropad(num, maxsize) {
+        var s = num+"";
+        var size = (maxsize+"").length;
+        while (s.length < size) s = "0" + s;
+        return s;
+      }
+
+      // Does NOT work on Chrome when using file:// protocol  :(
+      function setCookie(cname, cvalue, exdays=1461) {  // By default, 4 years
+        var expires = "expires=";
+        var d = new Date();
+        if (exdays > 0) d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        else if (exdays < 0) d.setTime(0);  // Delete cookie
+        else d.setTime(8640000000000000);   // Max date; We don't have use for session cookies here
+        document.cookie = cname + "=" + cvalue + ";" + expires + d.toUTCString() + ';';
+      }
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') c = c.substring(1);
+          if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+      }
+
+    </script>
+  </body>
+</html>
+
