@@ -183,7 +183,7 @@
         var jsdata = JSONfetch(jsonUrl);
         var OctoData = (jsdata != "" && isJSONvalid(jsdata)) ? JSON.parse(jsdata) : "";
         
-        var LastUpdate = new Date(OctoData._since);
+        var LastUpdate = new Date(OctoData._generated);
         var LastUpdateDiv = document.createElement('h3');
         LastUpdateDiv.id = "LastUpdate" + id;
         LastUpdateDiv.name = "LastUpdate" + id;
@@ -292,7 +292,7 @@
         var jsdata = JSONfetch(jsonUrl);   // Typically blocked by CORS; See https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf
         var OctoData = (jsdata != "" && isJSONvalid(jsdata)) ? JSON.parse(jsdata) : "";
         
-        var LastUpdate = new Date(OctoData._since);
+        var LastUpdate = new Date(OctoData._generated);
         var LastUpdateDiv = document.createElement('h3');
         LastUpdateDiv.id = "LastUpdate";
         LastUpdateDiv.name = "LastUpdate";
