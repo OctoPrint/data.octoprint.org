@@ -316,18 +316,54 @@
         LastUpdateDiv.textContent = "LastUpdate: " + LastUpdate.toString();
 
         var OctoVers = OctoData.versions;
+        var OctoPyVers = {version: Object.keys(OctoVers), value: Object.values(OctoVers).map(pyinst)};
+        var OctoPyMajor = {Py2: 0, Py3:0, Other:0};
+        for (var iloop = 0; iloop < OctoPyVers.version.length; iloop++) {
+          var majorver = OctoPyVers.version[iloop].slice(0,1);
+          if (majorver == "2") {
+            OctoPyMajor.Py2 += OctoPyVers.value[iloop];
+          } else if (majorver == "3") {
+            OctoPyMajor.Py3 += OctoPyVers.value[iloop];
+          } else {
+            OctoPyMajor.Other += OctoPyVers.value[iloop];
+          }
+        }
         var PieData = [{
-          labels: Object.keys(OctoVers),
-          values: Object.values(OctoVers).map(pyinst),
+          name: 'Summary',
+          position: "middle center",
+          labels: ['Python 2', 'Python 3', '(unknown)'],
+          values: Object.values(OctoPyMajor),
           direction: "clockwise",
-          position: "top center",
-//          rotation: 180,
+          // Both array values need to add up to 1.0 with the first value being smaller 
+          // than (hole-0.1) of the next trace plus however much padding you want (in this case, 2%).
+          domain: {'x': [0.32, 0.68], 'y': [0.32, 0.68]},
+          textinfo: 'percent',  // Could also be 'label+percent'
+          showlegend: false,
+          marker: {
+            colors: ['rgb(172,0,172)', 'rgb(0,172,0)', 'rgb(0,172,172)']
+          },
+          outsidetextfont: {
+            color: "#000"
+          },
+          type: 'pie'
+        },{
+          name: 'Versions',
+          position: "middle center",
+          labels: OctoPyVers.version,
+          values: OctoPyVers.value,
+          direction: "clockwise",
           hole: 0.4,
           outsidetextfont: {
             color: "#000"
           },
           type: 'pie'
         }];
+        // Try to keep Python 3 as GREEN
+        if (PieData[0].values[1] > PieData[0].values[0]) {
+          PieData[0].marker = {
+            colors: ['rgb(0,172,0)', 'rgb(172,0,172)', 'rgb(0,172,172)']
+          };
+        }
         var PieLayout = {
           legend: {
             orientation: "v",
