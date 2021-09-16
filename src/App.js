@@ -14,6 +14,7 @@ import DaysToggle from "./components/DaysToggle";
 import InstanceStats from "./components/InstanceStats";
 import PythonStats from "./components/PythonStats";
 import FirmwareStats from "./components/FirmwareStats";
+import ClientStats from "./components/ClientStats";
 
 import useLocalStorage from "./hooks/useLocalStorage";
 
@@ -119,6 +120,7 @@ export default function App(props) {
                   <InstanceStats days={days} />
                   <PythonStats days={days} />
                   <FirmwareStats days={days} />
+                  <ClientStats days={days} />
                 </Container>
               </main>
               <footer className={classes.footer}>
