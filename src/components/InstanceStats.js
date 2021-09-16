@@ -67,7 +67,7 @@ export default function InstanceStats(props) {
                 Unique instances per hour
             </Typography>
 
-            <ResponsiveContainer height={400}>
+            <ResponsiveContainer width="100%" height={400}>
                 <AreaChart height={400} data={instancesData}>
                     <defs>
                         <linearGradient id="instanceGradient" x1="0" y1="0" x2="0" y2="1">

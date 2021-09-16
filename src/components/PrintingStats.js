@@ -45,7 +45,7 @@ export default function PrintingStats(props) {
                 Printing duration per hour
             </Typography>
 
-            <ResponsiveContainer height={400}>
+            <ResponsiveContainer width="100%" height={400}>
                 <AreaChart height={400} data={printingData}>
                     <defs>
                         <linearGradient id="printingGradient" x1="0" y1="0" x2="0" y2="1">

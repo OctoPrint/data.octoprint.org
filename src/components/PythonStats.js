@@ -123,11 +123,11 @@ export default function InstanceStats(props) {
             </Typography>
 
             <Grid container>
-                <Grid item xs={5}>
+                <Grid item xs={12} md={5}>
                     <StatPieChart data={py2vs3Data} nameKey="version" dataKey="count" id="py2vs3" />
                 </Grid>
-                <Grid item xs={7}>
-                    <ResponsiveContainer height={400}>
+                <Grid item xs={12} md={7}>
+                    <ResponsiveContainer width="100%" height={400}>
                         <LineChart width={400} height={400} data={instancesData}>
                             <CartesianGrid strokeDashArray="3 3" />
                             <XAxis 
@@ -173,10 +173,10 @@ export default function InstanceStats(props) {
             </Typography>
 
             <Grid container>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                     <StatPieChart data={py2VersionsData} nameKey="version" dataKey="count" id="python2Versions" />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                     <StatPieChart data={py3VersionsData} nameKey="version" dataKey="count" id="python3Versions" />
                 </Grid>
             </Grid>
