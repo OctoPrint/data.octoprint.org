@@ -105,7 +105,7 @@ export default function InstanceStats(props) {
             <Typography variant="subtitle1">
                 Firmware top 10
             </Typography>
-            <StatPieChart data={firmwareTop10Data} nameKey="name" dataKey="count" id="firmwareTop10" />
+            <StatPieChart data={firmwareTop10Data} nameKey="name" dataKey="count" id="firmwareTop10" legendBelow />
             <Typography variant="subtitle1">
                 Notable firmware groups
             </Typography>

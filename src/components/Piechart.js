@@ -1,29 +1,35 @@
 import React from "react";
 
 import { useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { COLORS, piechartLegendFormatter, piechartLabelRenderer } from '../util/charts';
 
 export default function Piechart(props) {
     const theme = useTheme();
 
-    const outerRadius = props.half ? 100 : 150;
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const legendBelow = isSmallScreen || props.legendBelow;
 
     return (
-        <ResponsiveContainer height={400}>
+        <ResponsiveContainer width="100%" aspect={isSmallScreen ? 1 : 1.78}>
             <PieChart>
-                <Legend layout="vertical" align="right" verticalAlign="top" formatter={piechartLegendFormatter} />
+                {legendBelow ? (
+                    <Legend formatter={piechartLegendFormatter} />
+                ) : (
+                    <Legend layout="vertical" align="right" verticalAlign="top" formatter={piechartLegendFormatter} />
+                )}
                 <Tooltip 
                     contentStyle={{"background-color": theme.palette.background.paper, "color": theme.palette.text.primary}}
                     itemStyle={{ "color": theme.palette.text.primary }}
                 />
                 <Pie
                     data={props.data}
-                    label={piechartLabelRenderer}
+                    label={isSmallScreen ? false : piechartLabelRenderer}
                     startAngle={90}
                     endAngle={-270}
-                    outerRadius={outerRadius}
-                    innerRadius={outerRadius / 2}
+                    outerRadius="70%"
+                    innerRadius="35%"
                     stroke={theme.palette.background.paper}
                     nameKey={props.nameKey}
                     dataKey={props.dataKey}

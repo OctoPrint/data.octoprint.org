@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Typography } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
+import { useMediaQuery } from "@material-ui/core";
 import moment from "moment";
 
 import Stats from "./Stats";
@@ -18,6 +19,8 @@ export default function InstanceStats(props) {
     const [ versionsData, setVersionsData ] = useState([]);
 
     const theme = useTheme();
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const onData = (d) => {
         let versions = [];
@@ -67,8 +70,8 @@ export default function InstanceStats(props) {
                 Unique instances per hour
             </Typography>
 
-            <ResponsiveContainer width="100%" height={400}>
-                <AreaChart height={400} data={instancesData}>
+            <ResponsiveContainer width="100%" aspect={isSmallScreen ? 1 : 1.78}>
+                <AreaChart data={instancesData}>
                     <defs>
                         <linearGradient id="instanceGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor={COLORS[0]} stopOpacity={0.8} />
@@ -102,7 +105,7 @@ export default function InstanceStats(props) {
                         formatter={instanceTooltipFormatter} 
                         contentStyle={{"background-color": theme.palette.background.paper, "color": theme.palette.text.primary}}
                     />
-                    <Legend verticalAlign="top" />
+                    <Legend />
                     <Area type="monotone" dataKey="count" stroke={COLORS[0]} fillOpacity={1} fill="url(#instanceGradient)" name="Instances" />
                 </AreaChart>
             </ResponsiveContainer>

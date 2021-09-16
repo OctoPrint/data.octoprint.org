@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { Grid, Typography } from "@material-ui/core";
 import useTheme from "@material-ui/core/styles/useTheme"; 
+import { useMediaQuery } from "@material-ui/core";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import moment from "moment";
 
@@ -20,6 +21,8 @@ export default function InstanceStats(props) {
     const [ py2vs3Data, setPy2vs3Data ] = useState([]);
 
     const theme = useTheme();
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const onData = (d) => {
         let versions = [];
@@ -124,10 +127,10 @@ export default function InstanceStats(props) {
 
             <Grid container>
                 <Grid item xs={12} md={5}>
-                    <StatPieChart data={py2vs3Data} nameKey="version" dataKey="count" id="py2vs3" />
+                    <StatPieChart data={py2vs3Data} nameKey="version" dataKey="count" id="py2vs3" legendBelow />
                 </Grid>
                 <Grid item xs={12} md={7}>
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" aspect={isSmallScreen ? 1 : 1.78}>
                         <LineChart width={400} height={400} data={instancesData}>
                             <CartesianGrid strokeDashArray="3 3" />
                             <XAxis 
@@ -154,7 +157,7 @@ export default function InstanceStats(props) {
                                 formatter={instanceTooltipFormatter} 
                                 contentStyle={{"background-color": theme.palette.background.paper, "color": theme.palette.text.primary}}
                             />
-                            <Legend verticalAlign="top" />
+                            <Legend />
                             <Line dataKey="python2" dot={false} strokeWidth={2} stroke={COLORS[0]} name="Python 2" />
                             <Line dataKey="python3" dot={false} strokeWidth={2} stroke={COLORS[1]} name="Python 3" />
                         </LineChart>
