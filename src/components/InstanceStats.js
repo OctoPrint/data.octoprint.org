@@ -4,12 +4,11 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Typography } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import moment from "moment";
-import millify from "millify";
 
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 
-import { COLORS, dateFormatter, countFormatter, asPercentage } from "../util/charts";
+import { COLORS, dateFormatter, countFormatter } from "../util/charts";
 
 const VERSION_COUNT = 10;
 
@@ -57,24 +56,6 @@ export default function InstanceStats(props) {
     }
 
     const instanceTooltipFormatter = (value, name, props) => {
-        return [countFormatter(value), name];
-    }
-
-    const versionLabelRenderer = (props) => {
-        const {x, y, fill, textAnchor, name, percent} = props;
-        const percentage = asPercentage(percent);
-        return (
-            <text x={x} y={y} fill={fill} alignmentBaseline="middle" textAnchor={textAnchor}>{name} ({percentage}%)</text>
-        );
-    }
-
-    const versionLegendFormatter = (v, entry, index) => {
-        const {value, name, percent} = entry.payload;
-        const percentage = asPercentage(percent);
-        return `${name}: ${percentage}% (${millify(value)})`;
-    }
-
-    const versionTooltipFormatter = (value, name, props) => {
         return [countFormatter(value), name];
     }
 
