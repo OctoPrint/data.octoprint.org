@@ -69,6 +69,10 @@ export const countFormatter = (count) => {
     return millify(count);
 }
 
+export const durationFormatter = (duration) => {
+    return moment.duration(duration * 1000).humanize();
+}
+
 export const piechartLegendFormatter = (v, entry, index) => {
     const {value, name, percent} = entry.payload;
     const percentage = asPercentage(percent);

@@ -12,6 +12,7 @@ import Link from "@material-ui/core/Link";
 import DarkModeToggle from "./components/DarkModeToggle";
 import DaysToggle from "./components/DaysToggle";
 import InstanceStats from "./components/InstanceStats";
+import PrintingStats from "./components/PrintingStats";
 import PythonStats from "./components/PythonStats";
 import FirmwareStats from "./components/FirmwareStats";
 import ClientStats from "./components/ClientStats";
@@ -118,6 +119,7 @@ export default function App(props) {
               <main className={classes.content}>
                 <Container maxWidth="lg" className={classes.container}>
                   <InstanceStats days={days} />
+                  <PrintingStats days={days} />
                   <PythonStats days={days} />
                   <FirmwareStats days={days} />
                   <ClientStats days={days} />
