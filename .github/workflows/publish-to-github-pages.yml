@@ -1,4 +1,4 @@
-name: Build page
+name: Build & publish page
 
 on:
   push:
@@ -14,10 +14,10 @@ jobs:
         with:
           path: src
 
-      # - uses: actions/checkout@v2
-      #   with:
-      #     path: live
-      #     ref: gh-pages
+      - uses: actions/checkout@v2
+        with:
+          path: live
+          ref: gh-pages
 
       - name: Set up Node.js
         uses: actions/setup-node@v1
@@ -32,18 +32,18 @@ jobs:
         run: npm run build
         working-directory: src
 
-      # - name: 🔄 Prepare live copy
-      #   run: |
-      #     rm -rf live/* || true
-      #     touch live/.nojekyll
-      #     cp -r src/build/* live
+      - name: 🔄 Prepare live copy
+        run: |
+          rm -rf live/* || true
+          touch live/.nojekyll
+          cp -r src/build/* live
 
-      # - name: 🚀 Commit & deploy
-      #   if: github.repository == 'OctoPrint/data.octoprint.org' && github.event_name != 'pull_request'
-      #   uses: EndBug/add-and-commit@v4
-      #   with:
-      #     cwd: "live"
-      #     ref: "gh-pages"
-      #     message: "deploy: ${{ github.sha }}"
-      #     author_name: 'github-actions[bot]'
-      #     author_email: 'github-actions[bot]@users.noreply.github.com'
+      - name: 🚀 Commit & deploy
+        if: github.repository == 'OctoPrint/data.octoprint.org' && github.event_name != 'pull_request'
+        uses: EndBug/add-and-commit@v4
+        with:
+          cwd: "live"
+          ref: "gh-pages"
+          message: "deploy: ${{ github.sha }}"
+          author_name: 'github-actions[bot]'
+          author_email: 'github-actions[bot]@users.noreply.github.com'
