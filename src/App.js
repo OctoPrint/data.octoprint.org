@@ -14,8 +14,9 @@ import DaysToggle from "./components/DaysToggle";
 import InstanceStats from "./components/InstanceStats";
 import PrintingStats from "./components/PrintingStats";
 import PythonStats from "./components/PythonStats";
-import FirmwareStats from "./components/FirmwareStats";
+import ServerStats from "./components/ServerStats";
 import ClientStats from "./components/ClientStats";
+import FirmwareStats from "./components/FirmwareStats";
 
 import useLocalStorage from "./hooks/useLocalStorage";
 
@@ -121,8 +122,9 @@ export default function App(props) {
                   <InstanceStats days={days} />
                   <PrintingStats days={days} />
                   <PythonStats days={days} />
-                  <FirmwareStats days={days} />
+                  <ServerStats days={days} />
                   <ClientStats days={days} />
+                  <FirmwareStats days={days} />
                 </Container>
               </main>
               <footer className={classes.footer}>
