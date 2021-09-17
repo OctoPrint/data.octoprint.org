@@ -31,7 +31,6 @@ export default function ServerStats(props) {
         coreStats.sort((a, b) => d.cores[b].instances - d.cores[a].instances);
         coreStats.forEach((entry) => {
             if (cores.length <= 10 && entry > 0) {
-                console.log(entry);
                 cores.push({
                     name: entry,
                     count: d.cores[entry].instances
