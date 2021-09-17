@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Typography } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import { useMediaQuery } from "@material-ui/core";
 import moment from "moment";
@@ -17,6 +17,8 @@ export default function InstanceStats(props) {
     const [ count, setCount ] = useState();
     const [ instancesData, setInstancesData ] = useState([]);
     const [ versionsData, setVersionsData ] = useState([]);
+    const [ stableVersionsData, setStableVersionsData ] = useState([]);
+    const [ rcVersionsData, setRcVersionsData ] = useState([]);
 
     const theme = useTheme();
 
@@ -24,21 +26,55 @@ export default function InstanceStats(props) {
 
     const onData = (d) => {
         let versions = [];
+        let stableVersions = [];
+        let rcVersions = [];
         const otherVersions = {
             version: "Others",
             count: 0
         };
+        const otherStableVersions = {
+            version: "Others",
+            count: 0
+        };;
+        const otherRcVersions = {
+            version: "Others",
+            count: 0
+        };;
         for (const version in d.versions) {
+            const entry = {
+                version: version,
+                count: d.versions[version]
+            }
             if (versions.length < VERSION_COUNT - 1) {
-                versions.push({
-                    version: version,
-                    count: d.versions[version]
-                });
+                versions.push(entry);
             } else {
                 otherVersions.count += d.versions[version];
             }
+
+            if (version.includes("rc")) {
+                if (rcVersions.length < VERSION_COUNT - 1) {
+                    rcVersions.push(entry);
+                } else {
+                    otherRcVersions.count += d.versions[version];
+                }
+            } else {
+                if (stableVersions.length < VERSION_COUNT - 1) {
+                    stableVersions.push(entry);
+                } else {
+                    otherStableVersions.count += d.versions[version];
+                }
+            }
         };
-        versions.push(otherVersions);
+
+        if (otherVersions.count > 0) {
+            versions.push(otherVersions);
+        }
+        if (otherRcVersions.count > 0) {
+            rcVersions.push(otherRcVersions);
+        }
+        if (otherStableVersions.count > 0) {
+            stableVersions.push(otherStableVersions);
+        }
 
         let instances = [];
         for (const entry of d.histogram.slice(1, -1)) {
@@ -52,6 +88,8 @@ export default function InstanceStats(props) {
         setCount(d.count);
         setInstancesData(instances);
         setVersionsData(versions);
+        setStableVersionsData(stableVersions);
+        setRcVersionsData(rcVersions);
     }
 
     const instanceTooltipLabelFormatter = (label) => {
@@ -114,6 +152,20 @@ export default function InstanceStats(props) {
             </Typography>
 
             <StatPieChart data={versionsData} nameKey="version" dataKey="count" id="octoprintVersions" />
+
+            <Typography variant="subtitle2">
+                ... stable vs release candidates
+            </Typography>
+
+            <Grid container>
+                <Grid item xs={12} md={6}>
+                    <StatPieChart data={stableVersionsData} nameKey="version" dataKey="count" id="octoprintStableVersions" />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <StatPieChart data={rcVersionsData} nameKey="version" dataKey="count" id="octoprintRcVersions" />
+                </Grid>
+            </Grid>
+
         </Stats>
     );
 }
