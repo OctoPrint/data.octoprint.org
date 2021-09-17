@@ -103,7 +103,7 @@ export default function InstanceStats(props) {
                     <Tooltip 
                         labelFormatter={instanceTooltipLabelFormatter} 
                         formatter={instanceTooltipFormatter} 
-                        contentStyle={{"background-color": theme.palette.background.paper, "color": theme.palette.text.primary}}
+                        contentStyle={{"backgroundColor": theme.palette.background.paper, "color": theme.palette.text.primary}}
                     />
                     <Legend />
                     <Area type="monotone" dataKey="count" stroke={COLORS[0]} fillOpacity={1} fill="url(#instanceGradient)" name="Instances" />

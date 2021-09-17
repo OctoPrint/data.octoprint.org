@@ -20,7 +20,7 @@ export default function Piechart(props) {
                     <Legend layout="vertical" align="right" verticalAlign="top" formatter={piechartLegendFormatter} />
                 )}
                 <Tooltip 
-                    contentStyle={{"background-color": theme.palette.background.paper, "color": theme.palette.text.primary}}
+                    contentStyle={{"backgroundColor": theme.palette.background.paper, "color": theme.palette.text.primary}}
                     itemStyle={{ "color": theme.palette.text.primary }}
                 />
                 <Pie

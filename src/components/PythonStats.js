@@ -155,7 +155,7 @@ export default function InstanceStats(props) {
                             <Tooltip 
                                 labelFormatter={instanceTooltipLabelFormatter} 
                                 formatter={instanceTooltipFormatter} 
-                                contentStyle={{"background-color": theme.palette.background.paper, "color": theme.palette.text.primary}}
+                                contentStyle={{"backgroundColor": theme.palette.background.paper, "color": theme.palette.text.primary}}
                             />
                             <Legend />
                             <Line dataKey="python2" dot={false} strokeWidth={2} stroke={COLORS[0]} name="Python 2" />

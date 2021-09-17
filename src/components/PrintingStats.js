@@ -72,7 +72,7 @@ export default function PrintingStats(props) {
                         tick={{fill: theme.palette.text.secondary}}
                     />
                     <YAxis 
-                        label={{ value: "Instances", angle: -90, position: "insideLeft", fill: theme.palette.text.secondary }}
+                        label={{ value: "Total duration", angle: -90, position: "insideLeft", fill: theme.palette.text.secondary }}
                         tickFormatter={durationFormatter}
                         axisLine={{stroke: theme.palette.text.secondary}}
                         tickLine={{stroke: theme.palette.text.secondary}}
@@ -81,7 +81,7 @@ export default function PrintingStats(props) {
                     <Tooltip 
                         labelFormatter={histogramTooltipLabelFormatter} 
                         formatter={histogramTooltipFormatter} 
-                        contentStyle={{"background-color": theme.palette.background.paper, "color": theme.palette.text.primary}}
+                        contentStyle={{"backgroundColor": theme.palette.background.paper, "color": theme.palette.text.primary}}
                     />
                     <Legend />
                     <Area type="monotone" dataKey="count" stroke={COLORS[0]} fillOpacity={1} fill="url(#printingGradient)" name="Printing Duration" />
