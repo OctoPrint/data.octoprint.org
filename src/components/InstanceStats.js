@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Typography, Grid } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
-import { useMediaQuery } from "@material-ui/core";
+import { Typography, Grid } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useMediaQuery } from "@mui/material";
 import moment from "moment";
 
 import Stats from "./Stats";
@@ -22,7 +22,7 @@ export default function InstanceStats(props) {
 
     const theme = useTheme();
 
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
     const onData = (d) => {
         let versions = [];

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
+import CircularProgress from '@mui/material/CircularProgress';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
 
 import fetchStats from "../util/data";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 
 export default function Stats(props) {
     const [ loading, setLoading ] = useState(true);

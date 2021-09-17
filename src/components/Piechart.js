@@ -1,14 +1,14 @@
 import React from "react";
 
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { COLORS, piechartLegendFormatter, piechartLabelRenderer } from '../util/charts';
 
 export default function Piechart(props) {
     const theme = useTheme();
 
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const legendBelow = isSmallScreen || props.legendBelow;
 
     return (

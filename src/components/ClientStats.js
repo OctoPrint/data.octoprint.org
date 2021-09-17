@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
