@@ -64,7 +64,7 @@ export default function InstanceStats(props) {
 
     return (
         <Stats title={`Instance stats (past ${props.days} days)`} stats={`instance_stats_${props.days}d.json`} onData={onData}>
-            <p>Unique instances: {count}</p>
+            <p>Total unique instances: {count}</p>
 
             <Typography variant="subtitle1">
                 Unique instances per hour
@@ -94,7 +94,6 @@ export default function InstanceStats(props) {
                         tick={{fill: theme.palette.text.secondary}}
                     />
                     <YAxis 
-                        label={{ value: "Instances", angle: -90, position: "insideLeft", fill: theme.palette.text.secondary }}
                         tickFormatter={countFormatter}
                         axisLine={{stroke: theme.palette.text.secondary}}
                         tickLine={{stroke: theme.palette.text.secondary}}

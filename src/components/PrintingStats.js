@@ -42,7 +42,7 @@ export default function PrintingStats(props) {
 
     return (
         <Stats title={`Printing stats (past ${props.days} days)`} stats={`printing_stats_${props.days}d.json`} onData={onData}>
-            <p>Total duration: {moment.duration(total * 1000).humanize()}</p>
+            <p>Total duration of all prints: {moment.duration(total * 1000).humanize()}</p>
 
             <Typography variant="subtitle1">
                 Printing duration per hour
@@ -72,7 +72,6 @@ export default function PrintingStats(props) {
                         tick={{fill: theme.palette.text.secondary}}
                     />
                     <YAxis 
-                        label={{ value: "Total duration", angle: -90, position: "insideLeft", fill: theme.palette.text.secondary }}
                         tickFormatter={durationFormatter}
                         axisLine={{stroke: theme.palette.text.secondary}}
                         tickLine={{stroke: theme.palette.text.secondary}}

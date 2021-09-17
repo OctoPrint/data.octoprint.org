@@ -57,6 +57,7 @@ export default function ClientStats(props) {
 
     return (
         <Stats title={`Client Environment stats (past ${props.days} days)`} stats={`client_environment_stats_${props.days}d.json`} onData={onData}>
+            <p>Note: This data only gets tracked starting with OctoPrint 1.7.0, the instance counts will thus be low until general availability.</p>
             <Typography variant="subtitle1">
                 Browser
             </Typography>
