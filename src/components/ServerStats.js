@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
+import {useDays} from "./DaysProvider";
 
 const LOOKUP = {
     linux: "Linux",
@@ -12,10 +13,12 @@ const LOOKUP = {
     freebsd: "FreeBSD"
 }
 
-export default function ServerStats(props) {
+export default function ServerStats() {
     const [ coreData, setCoreData ] = useState([]);
     const [ osData, setOsData ] = useState([]);
     const [ bitsData, setBitsData ] = useState([]);
+
+    const {days} = useDays()
 
     const onData = (d) => {
         let cores = [];
@@ -63,7 +66,7 @@ export default function ServerStats(props) {
     }
 
     return (
-        <Stats title={`Server Environment stats (past ${props.days} days)`} stats={`server_environment_stats_${props.days}d.json`} onData={onData}>
+        <Stats title={`Server Environment stats (past ${days} days)`} stats={`server_environment_stats_${days}d.json`} onData={onData}>
             <Typography variant="subtitle1">
                 Operating System
             </Typography>

@@ -10,10 +10,11 @@ import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 
 import { COLORS, dateFormatter, countFormatter } from "../util/charts";
+import {useDays} from "./DaysProvider";
 
 const VERSION_COUNT = 10;
 
-export default function InstanceStats(props) {
+export default function InstanceStats() {
     const [ count, setCount ] = useState();
     const [ instancesData, setInstancesData ] = useState([]);
     const [ versionsData, setVersionsData ] = useState([]);
@@ -21,6 +22,7 @@ export default function InstanceStats(props) {
     const [ rcVersionsData, setRcVersionsData ] = useState([]);
 
     const theme = useTheme();
+    const {days} = useDays()
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -101,7 +103,7 @@ export default function InstanceStats(props) {
     }
 
     return (
-        <Stats title={`Instance stats (past ${props.days} days)`} stats={`instance_stats_${props.days}d.json`} onData={onData}>
+        <Stats title={`Instance stats (past ${days} days)`} stats={`instance_stats_${days}d.json`} onData={onData}>
             <p>Total unique instances: {count}</p>
 
             <Typography variant="subtitle1">

@@ -20,6 +20,7 @@ import ClientStats from "./components/ClientStats";
 import FirmwareStats from "./components/FirmwareStats";
 
 import useLocalStorage from "./hooks/useLocalStorage";
+import {DaysProvider} from "./components/DaysProvider";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -80,7 +81,6 @@ const useStyles = makeStyles(theme => ({
 export default function App(props) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const [darkMode, setDarkMode] = useLocalStorage("enableDarkMode", prefersDarkMode);
-    const [days, setDays] = useLocalStorage("days", 30);
 
     const palette = darkMode ? "dark" : "light";
     const darkModeTheme = createTheme(adaptV4Theme({
@@ -93,20 +93,19 @@ export default function App(props) {
         setDarkMode(!darkMode);
     }
 
-    const handleDaysToggle = () => {
-        setDays(days === 7 ? 30 : 7);
-    }
-
     return (
         <StyledEngineProvider injectFirst>
+            {/* StyledEngineProvider can be removed once we remove @mui/styles / JSS */}
             <ThemeProvider theme={darkModeTheme}>
-                <Main days={days} handleDaysToggle={handleDaysToggle} darkMode={darkMode} handleDarkModeToggle={handleDarkModeToggle} />
+                <DaysProvider>
+                    <Main darkMode={darkMode} handleDarkModeToggle={handleDarkModeToggle} />
+                </DaysProvider>
             </ThemeProvider>
         </StyledEngineProvider>
     );
 }
 
-function Main ({days, handleDaysToggle, darkMode, handleDarkModeToggle}) {
+function Main ({darkMode, handleDarkModeToggle}) {
     const classes = useStyles();
 
     const Navbar = () => {
@@ -116,7 +115,7 @@ function Main ({days, handleDaysToggle, darkMode, handleDarkModeToggle}) {
                     <div className={classes.grow}>
                         data.octoprint.org
                     </div>
-                    <DaysToggle days={days} onChange={handleDaysToggle} />
+                    <DaysToggle />
                     <DarkModeToggle darkMode={darkMode} onChange={handleDarkModeToggle} />
                 </Toolbar>
             </AppBar>
@@ -124,17 +123,17 @@ function Main ({days, handleDaysToggle, darkMode, handleDarkModeToggle}) {
     }
 
     return (
-        <div className={classes.root} style={{display: "flex", minHeight: "100vh", flexDirection: "column"}}>
+        <>
             <CssBaseline />
             <Navbar />
             <main className={classes.content}>
                 <Container maxWidth="lg" className={classes.container}>
-                    <InstanceStats days={days} />
-                    <PrintingStats days={days} />
-                    <PythonStats days={days} />
-                    <ServerStats days={days} />
-                    <ClientStats days={days} />
-                    <FirmwareStats days={days} />
+                    <InstanceStats />
+                    <PrintingStats />
+                    <PythonStats />
+                    <ServerStats />
+                    <ClientStats />
+                    <FirmwareStats />
                 </Container>
             </main>
             <footer className={classes.footer}>
@@ -142,6 +141,6 @@ function Main ({days, handleDaysToggle, darkMode, handleDarkModeToggle}) {
                 Based on tracking data from the Anonymous Usage Tracking plugin, refer to <Link href="https://tracking.octoprint.org" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">tracking.octoprint.org</Link> for details.
 
             </footer>
-        </div>
+        </>
     )
 }

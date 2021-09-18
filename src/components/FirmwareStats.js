@@ -4,12 +4,15 @@ import Typography from "@mui/material/Typography";
 
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
+import {useDays} from "./DaysProvider";
 
 const FW_COUNT = 10;
 
-export default function InstanceStats(props) {
+export default function InstanceStats() {
     const [ firmwareTop10Data, setFirmwareTop10Data ] = useState([]);
     const [ notableFirmwareData, setNotableFirmwareData ] = useState([]);
+
+    const {days} = useDays()
 
     const onData = (d) => {
         let firmwareTop10 = [];
@@ -101,7 +104,7 @@ export default function InstanceStats(props) {
     }
 
     return (
-        <Stats title={`Firmware stats (past ${props.days} days)`} stats={`firmware_stats_${props.days}d.json`} onData={onData}>
+        <Stats title={`Firmware stats (past ${days} days)`} stats={`firmware_stats_${days}d.json`} onData={onData}>
             <Typography variant="subtitle1">
                 Firmware top 10
             </Typography>

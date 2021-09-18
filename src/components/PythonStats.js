@@ -10,10 +10,11 @@ import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 
 import { COLORS, dateFormatter, countFormatter } from "../util/charts";
+import {useDays} from "./DaysProvider";
 
 const VERSION_COUNT = 10;
 
-export default function InstanceStats(props) {
+export default function InstanceStats() {
     const [ instancesData, setInstancesData ] = useState([]);
     const [ versionsData, setVersionsData ] = useState([]);
     const [ py2VersionsData, setPy2VersionsData ] = useState([]);
@@ -21,6 +22,7 @@ export default function InstanceStats(props) {
     const [ py2vs3Data, setPy2vs3Data ] = useState([]);
 
     const theme = useTheme();
+    const {days} = useDays()
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -120,7 +122,7 @@ export default function InstanceStats(props) {
     }
 
     return (
-        <Stats title={`Python stats (past ${props.days} days)`} stats={`python_stats_${props.days}d.json`} onData={onData}>
+        <Stats title={`Python stats (past ${days} days)`} stats={`python_stats_${days}d.json`} onData={onData}>
             <Typography variant="subtitle1">
                 Python 2 vs 3
             </Typography>
