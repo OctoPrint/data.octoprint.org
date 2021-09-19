@@ -2,9 +2,10 @@ import React from "react";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { adaptV4Theme } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
-import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {styled} from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material"
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
@@ -18,65 +19,11 @@ import PythonStats from "./components/PythonStats";
 import ServerStats from "./components/ServerStats";
 import ClientStats from "./components/ClientStats";
 import FirmwareStats from "./components/FirmwareStats";
-
 import useLocalStorage from "./hooks/useLocalStorage";
-import {DaysProvider} from "./components/DaysProvider";
+import DaysProvider from "./components/DaysProvider";
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        display: "flex",
-        overflow: "auto"
-    },
-    grow: {
-      flexGrow: 1
-    },
-
-    appBar: {
-    },
-    toolbar: {
-      [theme.breakpoints.down('lg')]: {
-        "justify-content": "flex-end",
-        "flex-wrap": "wrap",
-      }
-    },
-    urlbar: {
-      flexGrow: 1,
-      [theme.breakpoints.down('lg')]: {
-        "flex-basis": "100%",
-        order: 99,
-        paddingBottom: theme.spacing(2)
-      },
-    },
-    title: {
-      "justify-item": "left",
-    },
-
-    offset: theme.mixins.toolbar,
-
-    content: {
-      //flexGrow: 1,
-      "padding-top": theme.mixins.toolbar.minHeight,
-      [theme.breakpoints.down('lg')]: {
-        "padding-top": theme.mixins.toolbar.minHeight * 2,
-      }
-    },
-    container: {
-      paddingTop: theme.spacing(4),
-      [theme.breakpoints.down('lg')]: {
-        paddingTop: 0,
-      },
-      paddingBottom: theme.spacing(4),
-      flexGrow: 1,
-      "& > *": {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-      },
-    },
-    footer: {
-      textAlign: "center",
-      padding: "1em",
-    }
-}));
+// We have a sticky AppBar, so offset the content by using the CSS applied to the toolbar
+const Offset = styled('div')(({theme})=> theme.mixins.toolbar)
 
 export default function App(props) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -94,27 +41,23 @@ export default function App(props) {
     }
 
     return (
-        <StyledEngineProvider injectFirst>
-            {/* StyledEngineProvider can be removed once we remove @mui/styles / JSS */}
-            <ThemeProvider theme={darkModeTheme}>
-                <DaysProvider>
-                    <Main darkMode={darkMode} handleDarkModeToggle={handleDarkModeToggle} />
-                </DaysProvider>
-            </ThemeProvider>
-        </StyledEngineProvider>
+
+        <ThemeProvider theme={darkModeTheme}>
+            <DaysProvider>
+                <Main darkMode={darkMode} handleDarkModeToggle={handleDarkModeToggle} />
+            </DaysProvider>
+        </ThemeProvider>
     );
 }
 
 function Main ({darkMode, handleDarkModeToggle}) {
-    const classes = useStyles();
-
     const Navbar = () => {
         return (
-            <AppBar className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
-                    <div className={classes.grow}>
+            <AppBar>
+                <Toolbar sx={{flexWrap: 'wrap'}}>
+                    <Box display={"flex"} flexGrow={1}>
                         data.octoprint.org
-                    </div>
+                    </Box>
                     <DaysToggle />
                     <DarkModeToggle darkMode={darkMode} onChange={handleDarkModeToggle} />
                 </Toolbar>
@@ -126,21 +69,19 @@ function Main ({darkMode, handleDarkModeToggle}) {
         <>
             <CssBaseline />
             <Navbar />
-            <main className={classes.content}>
-                <Container maxWidth="lg" className={classes.container}>
-                    <InstanceStats />
-                    <PrintingStats />
-                    <PythonStats />
-                    <ServerStats />
-                    <ClientStats />
-                    <FirmwareStats />
-                </Container>
-            </main>
-            <footer className={classes.footer}>
+            <Offset />
+            <Container component={"main"} maxWidth="lg" sx={{mt: {lg: 4}, mb: 4, "& > *": {my: 2}}}>
+                <InstanceStats />
+                <PrintingStats />
+                <PythonStats />
+                <ServerStats />
+                <ClientStats />
+                <FirmwareStats />
+            </Container>
+            <Box component={"footer"} sx={{textAlign: "center", p: "1em"}}>
                 © 2021 <Link href="https://octoprint.org" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">OctoPrint</Link> &middot; <Link href="https://octoprint.org/imprint/" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">Imprint</Link> &middot; <Link href="https://octoprint.org/privacy/" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">Privacy Policy</Link><br />
                 Based on tracking data from the Anonymous Usage Tracking plugin, refer to <Link href="https://tracking.octoprint.org" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">tracking.octoprint.org</Link> for details.
-
-            </footer>
+            </Box>
         </>
     )
 }

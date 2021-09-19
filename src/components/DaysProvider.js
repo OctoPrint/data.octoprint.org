@@ -3,7 +3,7 @@ import useLocalStorage from "../hooks/useLocalStorage";
 
 const daysContext = React.createContext(undefined)
 
-export function DaysProvider({children}) {
+export default function DaysProvider({children}) {
     const days = useProvideDays()
     return <daysContext.Provider value={days}>{children}</daysContext.Provider>
 }
