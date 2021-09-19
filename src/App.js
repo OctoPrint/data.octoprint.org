@@ -1,7 +1,6 @@
 import React from "react";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { adaptV4Theme } from "@mui/material/styles";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {styled} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -30,11 +29,11 @@ export default function App(props) {
     const [darkMode, setDarkMode] = useLocalStorage("enableDarkMode", prefersDarkMode);
 
     const palette = darkMode ? "dark" : "light";
-    const darkModeTheme = createTheme(adaptV4Theme({
+    const darkModeTheme = createTheme({
         palette: {
             mode: palette
         }
-    }));
+    })
 
     const handleDarkModeToggle = () => {
         setDarkMode(!darkMode);
