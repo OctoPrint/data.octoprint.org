@@ -25,7 +25,7 @@ import DaysProvider from "./components/DaysProvider";
 const Offset = styled('div')(({theme})=> theme.mixins.toolbar)
 
 export default function App(props) {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', { noSsr: true });
     const [darkMode, setDarkMode] = useLocalStorage("enableDarkMode", prefersDarkMode);
 
     const palette = darkMode ? "dark" : "light";
