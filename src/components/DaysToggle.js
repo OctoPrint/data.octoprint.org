@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
-import Tooltip from "@material-ui/core/Tooltip";
-import Button from "@material-ui/core/Button";
+import Tooltip from "@mui/material/Tooltip";
+import Button from "@mui/material/Button";
+import {useDays} from "./DaysProvider";
 
-export default function DaysToggle(props) {
-    const [days, setDays] = useState(props.days);
+export default function DaysToggle() {
+    const {days, setDays} = useDays()
 
     const handleDaysToggle = () => {
         const newDays = days === 7 ? 30 : 7;
-        props.onChange(newDays);
         setDays(newDays);
     };
 

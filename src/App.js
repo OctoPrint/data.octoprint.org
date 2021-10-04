@@ -1,13 +1,14 @@
 import React from "react";
 
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { makeStyles } from "@material-ui/core/styles";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { CssBaseline } from "@material-ui/core";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {styled} from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material"
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
 
 import DarkModeToggle from "./components/DarkModeToggle";
 import DaysToggle from "./components/DaysToggle";
@@ -17,122 +18,69 @@ import PythonStats from "./components/PythonStats";
 import ServerStats from "./components/ServerStats";
 import ClientStats from "./components/ClientStats";
 import FirmwareStats from "./components/FirmwareStats";
-
 import useLocalStorage from "./hooks/useLocalStorage";
+import DaysProvider from "./components/DaysProvider";
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        display: "flex",
-        overflow: "auto"
-    },
-    grow: {
-      flexGrow: 1
-    },
-
-    appBar: {
-    },
-    toolbar: {
-      [theme.breakpoints.down('md')]: {
-        "justify-content": "flex-end",
-        "flex-wrap": "wrap",
-      }
-    },
-    urlbar: {
-      flexGrow: 1,
-      [theme.breakpoints.down('md')]: {
-        "flex-basis": "100%",
-        order: 99,
-        paddingBottom: theme.spacing(2)
-      },
-    },
-    title: {
-      "justify-item": "left",
-    },
-
-    offset: theme.mixins.toolbar,
-
-    content: {
-      //flexGrow: 1,
-      "padding-top": theme.mixins.toolbar.minHeight,
-      [theme.breakpoints.down('md')]: {
-        "padding-top": theme.mixins.toolbar.minHeight * 2,
-      }
-    },
-    container: {
-      paddingTop: theme.spacing(4),
-      [theme.breakpoints.down('md')]: {
-        paddingTop: 0,
-      },
-      paddingBottom: theme.spacing(4),
-      flexGrow: 1,
-      "& > *": {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-      },
-    },
-    footer: {
-      textAlign: "center",
-      padding: "1em",
-    }
-}));
+// We have a sticky AppBar, so offset the content by using the CSS applied to the toolbar
+const Offset = styled('div')(({theme})=> theme.mixins.toolbar)
 
 export default function App(props) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const [darkMode, setDarkMode] = useLocalStorage("enableDarkMode", prefersDarkMode);
-    const [days, setDays] = useLocalStorage("days", 30);
 
     const palette = darkMode ? "dark" : "light";
-    const darkModeTheme = createMuiTheme({
+    const darkModeTheme = createTheme({
         palette: {
-            type: palette
+            mode: palette
         }
-    });
+    })
 
     const handleDarkModeToggle = () => {
         setDarkMode(!darkMode);
     }
 
-    const handleDaysToggle = () => {
-        setDays(days === 7 ? 30 : 7);
-    }
+    return (
 
-    const classes = useStyles();
+        <ThemeProvider theme={darkModeTheme}>
+            <DaysProvider>
+                <Main darkMode={darkMode} handleDarkModeToggle={handleDarkModeToggle} />
+            </DaysProvider>
+        </ThemeProvider>
+    );
+}
 
+function Main ({darkMode, handleDarkModeToggle}) {
     const Navbar = () => {
-      return (
-        <AppBar className={classes.appBar}>
-          <Toolbar className={classes.toolbar}>
-              <div className={classes.grow}>
-                data.octoprint.org
-              </div>
-              <DaysToggle days={days} onChange={handleDaysToggle} />
-              <DarkModeToggle darkMode={darkMode} onChange={handleDarkModeToggle} />
-          </Toolbar>
-        </AppBar>
-      )
+        return (
+            <AppBar>
+                <Toolbar sx={{flexWrap: 'wrap'}}>
+                    <Box display={"flex"} flexGrow={1}>
+                        data.octoprint.org
+                    </Box>
+                    <DaysToggle />
+                    <DarkModeToggle darkMode={darkMode} onChange={handleDarkModeToggle} />
+                </Toolbar>
+            </AppBar>
+        )
     }
 
     return (
-        <ThemeProvider theme={darkModeTheme}>
-          <div className={classes.root} style={{display: "flex", minHeight: "100vh", flexDirection: "column"}}>
-              <CssBaseline />
-              <Navbar />
-              <main className={classes.content}>
-                <Container maxWidth="lg" className={classes.container}>
-                  <InstanceStats days={days} />
-                  <PrintingStats days={days} />
-                  <PythonStats days={days} />
-                  <ServerStats days={days} />
-                  <ClientStats days={days} />
-                  <FirmwareStats days={days} />
-                </Container>
-              </main>
-              <footer className={classes.footer}>
+        <>
+            <CssBaseline />
+            <Navbar />
+            <Offset />
+            <Container component={"main"} maxWidth="lg" sx={{mt: {lg: 4}, mb: 4, "& > *": {my: 2}}}>
+                <InstanceStats />
+                <PrintingStats />
+                <PythonStats />
+                <ServerStats />
+                <ClientStats />
+                <FirmwareStats />
+            </Container>
+            <Box component={"footer"} sx={{textAlign: "center", p: "1em"}}>
                 © 2021 <Link href="https://octoprint.org" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">OctoPrint</Link> &middot; <Link href="https://octoprint.org/imprint/" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">Imprint</Link> &middot; <Link href="https://octoprint.org/privacy/" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">Privacy Policy</Link><br />
                 Based on tracking data from the Anonymous Usage Tracking plugin, refer to <Link href="https://tracking.octoprint.org" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">tracking.octoprint.org</Link> for details.
-
-              </footer>
-          </div>
-        </ThemeProvider>
+            </Box>
+        </>
     )
 }

@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
+import {useDays} from "./DaysProvider";
 
 const COUNT = 10;
 
 export default function ClientStats(props) {
     const [ browserTop10Data, setBrowserTop10Data ] = useState([]);
     const [ osTop10Data, setOsTop10Data ] = useState([]);
+
+    const {days} = useDays()
 
     const onData = (d) => {
         let browserTop10 = [], osTop10 = [];
@@ -56,7 +59,7 @@ export default function ClientStats(props) {
     }
 
     return (
-        <Stats title={`Client Environment stats (past ${props.days} days)`} stats={`client_environment_stats_${props.days}d.json`} onData={onData}>
+        <Stats title={`Client Environment stats (past ${days} days)`} stats={`client_environment_stats_${days}d.json`} onData={onData}>
             <p>Note: This data only gets tracked starting with OctoPrint 1.7.0, the instance counts will thus be low until general availability.</p>
             <Typography variant="subtitle1">
                 Browser

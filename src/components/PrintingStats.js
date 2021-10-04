@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Typography } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
-import { useMediaQuery } from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useMediaQuery } from "@mui/material";
 import moment from "moment";
 
 import Stats from "./Stats";
 
 import { COLORS, dateFormatter, durationFormatter } from "../util/charts";
+import {useDays} from "./DaysProvider";
 
-export default function PrintingStats(props) {
+export default function PrintingStats() {
     const [ total, setTotal ] = useState();
     const [ printingData, setPrintingData ] = useState([]);
 
     const theme = useTheme();
+    const {days} = useDays()
 
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
     const onData = (d) => {
         let totals = [];
@@ -41,7 +43,7 @@ export default function PrintingStats(props) {
     }
 
     return (
-        <Stats title={`Printing stats (past ${props.days} days)`} stats={`printing_stats_${props.days}d.json`} onData={onData}>
+        <Stats title={`Printing stats (past ${days} days)`} stats={`printing_stats_${days}d.json`} onData={onData}>
             <p>Total duration of all prints: {moment.duration(total * 1000).humanize()}</p>
 
             <Typography variant="subtitle1">
