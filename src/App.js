@@ -17,6 +17,7 @@ import PrintingStats from "./components/PrintingStats";
 import PythonStats from "./components/PythonStats";
 import ServerStats from "./components/ServerStats";
 import ClientStats from "./components/ClientStats";
+import RPiStats from "./components/RPiStats";
 import FirmwareStats from "./components/FirmwareStats";
 import useLocalStorage from "./hooks/useLocalStorage";
 import DaysProvider from "./components/DaysProvider";
@@ -75,6 +76,7 @@ function Main ({darkMode, handleDarkModeToggle}) {
                 <PythonStats />
                 <ServerStats />
                 <ClientStats />
+                <RPiStats />
                 <FirmwareStats />
             </Container>
             <Box component={"footer"} sx={{textAlign: "center", p: "1em"}}>
