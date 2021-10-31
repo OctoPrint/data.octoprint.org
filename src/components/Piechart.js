@@ -12,7 +12,7 @@ export default function Piechart(props) {
     const legendBelow = isSmallScreen || props.legendBelow;
 
     return (
-        <ResponsiveContainer width="100%" aspect={isSmallScreen ? 1 : 1.78}>
+        <ResponsiveContainer width="100%" aspect={isSmallScreen ? (1 / (1 + (props.data.length / 12))) : 1.78}>
             <PieChart>
                 {legendBelow ? (
                     <Legend formatter={piechartLegendFormatter} />
