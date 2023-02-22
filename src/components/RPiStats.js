@@ -9,6 +9,7 @@ import {useDays} from "./DaysProvider";
 export default function RPiStats() {
     const [ modelData, setModelData ] = useState([]);
     const [ octopiData, setOctopiData ] = useState([]);
+    const [ octopiUpToDateData, setOctopiUpToDateData ] = useState([]);
 
     const {days} = useDays()
 
@@ -36,8 +37,18 @@ export default function RPiStats() {
             }
         });
 
+        const octopiUpToDateStats = Object.keys(d.octopiuptodate_builds);
+        octopiUpToDateStats.sort((a, b) => d.octopiuptodate_builds[b].instances - d.octopiuptodate_builds[a].instances);
+        const octopiUpToDate = octopiUpToDateStats.map((octopiUpToDate) => {
+            return {
+                name: octopiUpToDate,
+                count: d.octopiuptodate_builds[octopiUpToDate].instances
+            }
+        });
+
         setModelData(models);
         setOctopiData(octopi);
+        setOctopiUpToDateData(octopiUpToDate);
     }
 
     return (
@@ -45,11 +56,15 @@ export default function RPiStats() {
             <Typography variant="subtitle1">
                 Raspberry Pi Model
             </Typography>
-            <StatPieChart data={modelData} nameKey="name" dataKey="count" id="model" />
+            <StatPieChart data={modelData} nameKey="name" dataKey="count" id="model" legendBelow />
             <Typography variant="subtitle1">
                 OctoPi Version
             </Typography>
-            <StatPieChart data={octopiData} nameKey="name" dataKey="count" id="octopi" />
+            <StatPieChart data={octopiData} nameKey="name" dataKey="count" id="octopi" legendBelow />
+            <Typography variant="subtitle1">
+                OctoPi-UpToDate Build
+            </Typography>
+            <StatPieChart data={octopiUpToDateData} nameKey="name" dataKey="count" id="octopiUpToDate" legendBelow />
          </Stats>
     );
 }
