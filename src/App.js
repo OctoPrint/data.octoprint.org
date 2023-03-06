@@ -23,7 +23,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import DaysProvider from "./components/DaysProvider";
 
 // We have a sticky AppBar, so offset the content by using the CSS applied to the toolbar
-const Offset = styled('div')(({theme})=> theme.mixins.toolbar)
+const Offset = styled('div')(({theme})=> theme.mixins.toolbar);
 
 export default function App(props) {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', { noSsr: true });
@@ -51,6 +51,8 @@ export default function App(props) {
 }
 
 function Main ({darkMode, handleDarkModeToggle}) {
+    const year = new Date().getFullYear();
+
     const Navbar = () => {
         return (
             <AppBar>
@@ -80,7 +82,7 @@ function Main ({darkMode, handleDarkModeToggle}) {
                 <FirmwareStats />
             </Container>
             <Box component={"footer"} sx={{textAlign: "center", p: "1em"}}>
-                © 2021 <Link href="https://octoprint.org" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">OctoPrint</Link> &middot; <Link href="https://octoprint.org/imprint/" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">Imprint</Link> &middot; <Link href="https://octoprint.org/privacy/" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">Privacy Policy</Link><br />
+                © 2021-{year} <Link href="https://octoprint.org" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">OctoPrint</Link> &middot; <Link href="https://octoprint.org/imprint/" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">Imprint</Link> &middot; <Link href="https://octoprint.org/privacy/" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">Privacy Policy</Link><br />
                 Based on tracking data from the Anonymous Usage Tracking plugin, refer to <Link href="https://tracking.octoprint.org" target="_blank" rel="noreferrer noopener" color="inherit" underline="always">tracking.octoprint.org</Link> for details.
             </Box>
         </>
