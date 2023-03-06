@@ -66,7 +66,7 @@ export const dateFormatter = (date) => {
 }
 
 export const countFormatter = (count) => {
-    return millify(count);
+    return millify(count, {precision: 2});
 }
 
 export const durationFormatter = (duration) => {
@@ -87,7 +87,6 @@ export const piechartLabelRenderer = (props) => {
     );
 } 
 
-
 export const asPercentage = (percentage) => {
-    return Math.round(percentage * 100, 2);
+    return (percentage * 100).toFixed(2);
 }
