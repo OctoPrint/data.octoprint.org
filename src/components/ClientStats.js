@@ -8,9 +8,28 @@ import {useDays} from "./DaysProvider";
 
 const COUNT = 10;
 
+const ES6_COMPATIBLE = {
+    "Chrome": 51,
+    "Firefox": 54,
+    "Edge": 15,
+    "Safari": 10,
+    "Mobile Safari": 10,
+    "Opera": 38,
+    "Samsung Browser": 5,
+    "Chrome WebView": 101,
+    "Android Browser": 101,
+    "Waterfox": 54,
+    "IE": 1000,
+    "Opera Touch": 64,
+    "QQBrowser": 10,
+    "Chromium": 101,
+    "terminator": 0
+};
+
 export default function ClientStats(props) {
     const [ browserTop10Data, setBrowserTop10Data ] = useState([]);
     const [ osTop10Data, setOsTop10Data ] = useState([]);
+    const [ es6SupportData, setEs6SupportData ] = useState([]);
 
     const {days} = useDays()
 
@@ -54,8 +73,44 @@ export default function ClientStats(props) {
             osTop10.push(otherOs);
         };
 
+        let es6Supported = 0;
+        let es6NotSupported = 0;
+        let es6Unknown = 0;
+        for (const version in d.browser_version) {
+            const instances = d.browser_version[version].instances;
+
+            try {
+                console.log(version);
+                const [b, v] = version.split("/");
+                const v_to_check = v.split(".")[0];
+                console.log(`Browser: ${b}, version: ${v}, version to check: ${v_to_check}, instances: ${instances}`);
+    
+                if (!d.browser[b]) {
+                    es6Unknown += instances;
+                    continue;
+                }
+    
+                if (ES6_COMPATIBLE[b] === undefined) {
+                    es6Unknown += instances;
+                } else if (v_to_check >= ES6_COMPATIBLE[b]) {
+                    es6Supported += instances;
+                } else {
+                    es6NotSupported += instances;
+                }
+            } catch (e) {
+                console.log(e)
+                es6Unknown += instances;
+            };
+        }
+        let es6Support = [
+            { name: "ES6 supported", count: es6Supported },
+            { name: "ES6 unsupported", count: es6NotSupported },
+            { name: "Unknown ES6 support", count: es6Unknown }
+        ]
+
         setBrowserTop10Data(browserTop10);
         setOsTop10Data(osTop10);
+        setEs6SupportData(es6Support);
     }
 
     return (
@@ -64,6 +119,7 @@ export default function ClientStats(props) {
                 Browser
             </Typography>
             <StatPieChart data={browserTop10Data} nameKey="name" dataKey="count" id="browserTop10" />
+            <StatPieChart data={es6SupportData} nameKey="name" dataKey="count" id="browserEs6Support" />
             <Typography variant="subtitle1">
                 Operating System
             </Typography>
