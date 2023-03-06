@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useMediaQuery } from "@mui/material";
 import moment from "moment";
 
+import GraphHeader from "./GraphHeader";
 import Stats from "./Stats";
 
 import { COLORS, dateFormatter, durationFormatter } from "../util/charts";
@@ -43,12 +43,10 @@ export default function PrintingStats() {
     }
 
     return (
-        <Stats title={`Printing stats (past ${days} days)`} stats={`printing_stats_${days}d.json`} onData={onData}>
+        <Stats title={`Printing stats (past ${days} days)`} stats={`printing_stats_${days}d.json`} anchor="printing" onData={onData}>
             <p>Total duration of all prints: {moment.duration(total * 1000).humanize()}</p>
 
-            <Typography variant="subtitle1">
-                Printing duration per hour
-            </Typography>
+            <GraphHeader title="Printing duration per hour" anchor="printing_per_hour" />
 
             <ResponsiveContainer width="100%" aspect={isSmallScreen ? 1 : 1.78}>
                 <AreaChart data={printingData}>

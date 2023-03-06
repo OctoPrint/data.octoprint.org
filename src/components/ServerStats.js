@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import Typography from "@mui/material/Typography";
-
+import GraphHeader from "./GraphHeader";
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 import {useDays} from "./DaysProvider";
@@ -66,18 +65,12 @@ export default function ServerStats() {
     }
 
     return (
-        <Stats title={`Server Environment stats (past ${days} days)`} stats={`server_environment_stats_${days}d.json`} onData={onData}>
-            <Typography variant="subtitle1">
-                Operating System
-            </Typography>
+        <Stats title={`Server Environment stats (past ${days} days)`} stats={`server_environment_stats_${days}d.json`} anchor="server" onData={onData}>
+            <GraphHeader title="Operating system" anchor="server_os" />
             <StatPieChart data={osData} nameKey="name" dataKey="count" id="os" />
-            <Typography variant="subtitle1">
-                Bits
-            </Typography>
+            <GraphHeader title="Bits" anchor="server_bits" />
             <StatPieChart data={bitsData} nameKey="name" dataKey="count" id="bits" />
-            <Typography variant="subtitle1">
-                Core count
-            </Typography>
+            <GraphHeader title="Core count" anchor="server_cores" />
             <StatPieChart data={coreData} nameKey="name" dataKey="count" id="cores" />
          </Stats>
     );

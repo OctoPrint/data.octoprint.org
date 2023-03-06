@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import Typography from "@mui/material/Typography";
-
+import GraphHeader from "./GraphHeader";
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 import {useDays} from "./DaysProvider";
@@ -104,14 +103,10 @@ export default function InstanceStats() {
     }
 
     return (
-        <Stats title={`Firmware stats (past ${days} days)`} stats={`firmware_stats_${days}d.json`} onData={onData}>
-            <Typography variant="subtitle1">
-                Firmware top 10
-            </Typography>
+        <Stats title={`Firmware stats (past ${days} days)`} stats={`firmware_stats_${days}d.json`} anchor="firmware" onData={onData}>
+            <GraphHeader title="Firmware top 10" anchor="firmware_top10" />
             <StatPieChart data={firmwareTop10Data} nameKey="name" dataKey="count" id="firmwareTop10" legendBelow />
-            <Typography variant="subtitle1">
-                Notable firmware groups
-            </Typography>
+            <GraphHeader title="Notable firmware groups" anchor="firmware_families" />
             <StatPieChart data={notableFirmwareData} nameKey="name" dataKey="count" id="notableFirmware" />
          </Stats>
     );

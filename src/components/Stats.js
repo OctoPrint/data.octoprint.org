@@ -41,7 +41,7 @@ export default function Stats(props) {
 
     return (
         <Card style={{}}>
-            <CardHeader title={props.title} />
+            <CardHeader title={props.title} titleTypographyProps={{ id: props.anchor }} />
             <CardContent>
                 <Content />
             </CardContent>

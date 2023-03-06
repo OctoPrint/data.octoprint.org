@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useTheme } from '@mui/material/styles'; 
 import { useMediaQuery } from "@mui/material";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import moment from "moment";
 
+import GraphHeader from "./GraphHeader";
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 
@@ -122,10 +123,8 @@ export default function InstanceStats() {
     }
 
     return (
-        <Stats title={`Python stats (past ${days} days)`} stats={`python_stats_${days}d.json`} onData={onData}>
-            <Typography variant="subtitle1">
-                Python 2 vs 3
-            </Typography>
+        <Stats title={`Python stats (past ${days} days)`} stats={`python_stats_${days}d.json`} anchor="python" onData={onData}>
+            <GraphHeader title="Python 2 vs 3" anchor="python_py2vs3" />
 
             <Grid container>
                 <Grid item xs={12} md={5}>
@@ -167,15 +166,11 @@ export default function InstanceStats() {
                 </Grid>
             </Grid>
 
-            <Typography variant="subtitle1">
-                Python version distribution
-            </Typography>
+            <GraphHeader title="Python version distribution" anchor="python_versions" />
 
             <StatPieChart data={versionsData} nameKey="version" dataKey="count" id="pythonVersions" />
 
-            <Typography variant="subtitle1">
-                Individual Python version distribution for 2.x and 3.x
-            </Typography>
+            <GraphHeader title="Individual Python version distribution for 2.x and 3.x" anchor="python_versions_2_vs_3" />
 
             <Grid container>
                 <Grid item xs={12} md={6}>

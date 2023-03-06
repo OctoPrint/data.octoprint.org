@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Typography, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useMediaQuery } from "@mui/material";
 import moment from "moment";
 
+import GraphHeader from "./GraphHeader";
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 
@@ -103,12 +104,10 @@ export default function InstanceStats() {
     }
 
     return (
-        <Stats title={`Instance stats (past ${days} days)`} stats={`instance_stats_${days}d.json`} onData={onData}>
+        <Stats title={`Instance stats (past ${days} days)`} stats={`instance_stats_${days}d.json`} anchor="instances" onData={onData}>
             <p>Total unique instances: {count}</p>
 
-            <Typography variant="subtitle1">
-                Unique instances per hour
-            </Typography>
+            <GraphHeader title="Unique instances per hour" anchor="instances_per_hour" />
 
             <ResponsiveContainer width="100%" aspect={isSmallScreen ? 1 : 1.78}>
                 <AreaChart data={instancesData}>
@@ -149,15 +148,11 @@ export default function InstanceStats() {
                 </AreaChart>
             </ResponsiveContainer>
 
-            <Typography variant="subtitle1">
-                OctoPrint version distribution
-            </Typography>
+            <GraphHeader title="OctoPrint version distribution" anchor="instances_versions" />
 
             <StatPieChart data={versionsData} nameKey="version" dataKey="count" id="octoprintVersions" />
 
-            <Typography variant="subtitle2">
-                ... stable vs release candidates
-            </Typography>
+            <GraphHeader title="... stable vs release candidates" anchor="instances_stable_vs_rc" />
 
             <Grid container>
                 <Grid item xs={12} md={6}>

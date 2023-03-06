@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import Typography from "@mui/material/Typography";
-
+import GraphHeader from "./GraphHeader";
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 import {useDays} from "./DaysProvider";
@@ -52,18 +51,12 @@ export default function RPiStats() {
     }
 
     return (
-        <Stats title={`Raspberry Pi related stats (past ${days} days)`} stats={`rpi_stats_${days}d.json`} onData={onData}>
-            <Typography variant="subtitle1">
-                Raspberry Pi Model
-            </Typography>
+        <Stats title={`Raspberry Pi related stats (past ${days} days)`} stats={`rpi_stats_${days}d.json`} anchor="rpi" onData={onData}>
+            <GraphHeader title="Raspberry Pi model" anchor="rpi_model" />
             <StatPieChart data={modelData} nameKey="name" dataKey="count" id="model" legendBelow />
-            <Typography variant="subtitle1">
-                OctoPi Version
-            </Typography>
+            <GraphHeader title="OctoPi version" anchor="rpi_octopi_version" />
             <StatPieChart data={octopiData} nameKey="name" dataKey="count" id="octopi" legendBelow />
-            <Typography variant="subtitle1">
-                OctoPi-UpToDate Build
-            </Typography>
+            <GraphHeader title="OctoPi-UpToDate build" anchor="rpi_octopi_up_to_date_build" />
             <StatPieChart data={octopiUpToDateData} nameKey="name" dataKey="count" id="octopiUpToDate" legendBelow />
          </Stats>
     );

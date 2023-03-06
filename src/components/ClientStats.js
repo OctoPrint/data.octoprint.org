@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import Typography from "@mui/material/Typography";
-
+import GraphHeader from "./GraphHeader";
 import Stats from "./Stats";
 import StatPieChart from "./Piechart";
 import {useDays} from "./DaysProvider";
@@ -80,10 +79,8 @@ export default function ClientStats(props) {
             const instances = d.browser_version[version].instances;
 
             try {
-                console.log(version);
                 const [b, v] = version.split("/");
                 const v_to_check = v.split(".")[0];
-                console.log(`Browser: ${b}, version: ${v}, version to check: ${v_to_check}, instances: ${instances}`);
     
                 if (!d.browser[b]) {
                     es6Unknown += instances;
@@ -98,7 +95,6 @@ export default function ClientStats(props) {
                     es6NotSupported += instances;
                 }
             } catch (e) {
-                console.log(e)
                 es6Unknown += instances;
             };
         }
@@ -114,15 +110,12 @@ export default function ClientStats(props) {
     }
 
     return (
-        <Stats title={`Client Environment stats (past ${days} days)`} stats={`client_environment_stats_${days}d.json`} onData={onData}>
-            <Typography variant="subtitle1">
-                Browser
-            </Typography>
+        <Stats title={`Client Environment stats (past ${days} days)`} stats={`client_environment_stats_${days}d.json`} anchor="client" onData={onData}>
+            <GraphHeader title="Browser family" anchor="client_browser" />
             <StatPieChart data={browserTop10Data} nameKey="name" dataKey="count" id="browserTop10" />
+            <GraphHeader title="Browser ES6 support" anchor="client_es6" />
             <StatPieChart data={es6SupportData} nameKey="name" dataKey="count" id="browserEs6Support" />
-            <Typography variant="subtitle1">
-                Operating System
-            </Typography>
+            <GraphHeader title="Operating system" anchor="client_os" />
             <StatPieChart data={osTop10Data} nameKey="name" dataKey="count" id="osTop10" />
          </Stats>
     );
