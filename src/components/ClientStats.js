@@ -8,15 +8,15 @@ import {useDays} from "./DaysProvider";
 const COUNT = 10;
 
 const BROWSER_COMPATIBLE = {
-    "Chrome": 55,
-    "Chromium": 55,
-    "Chrome WebView": 55,
-    "Firefox": 54,
-    "Edge": 15,
-    "Safari": 11,
-    "Mobile Safari": 11,
-    "Opera": 42,
-    "Samsung Browser": 6,
+    "Chrome": 63,
+    "Chromium": 63,
+    "Chrome WebView": 63,
+    "Firefox": 55,
+    "Edge": 79,
+    "Safari": 12,
+    "Mobile Safari": 12,
+    "Opera": 50,
+    "Samsung Browser": 8,
     "QQBrowser": 13,
 
     // definitely unsupported
@@ -26,7 +26,7 @@ const BROWSER_COMPATIBLE = {
 export default function ClientStats(props) {
     const [ browserTop10Data, setBrowserTop10Data ] = useState([]);
     const [ osTop10Data, setOsTop10Data ] = useState([]);
-    const [ es8SupportData, setEs8SupportData ] = useState([]);
+    const [ es9SupportData, setEs9SupportData ] = useState([]);
 
     const {days} = useDays()
 
@@ -96,23 +96,23 @@ export default function ClientStats(props) {
                 browserSupportUnknown += instances;
             };
         }
-        let es8Support = [
-            { name: "ES8 supported", count: browserSupported },
-            { name: "ES8 unsupported", count: browserNotSupported },
-            { name: "Unknown ES8 support", count: browserSupportUnknown }
+        let es9Support = [
+            { name: "ES9 supported", count: browserSupported },
+            { name: "ES9 unsupported", count: browserNotSupported },
+            { name: "Unknown ES9 support", count: browserSupportUnknown }
         ]
 
         setBrowserTop10Data(browserTop10);
         setOsTop10Data(osTop10);
-        setEs8SupportData(es8Support);
+        setEs9SupportData(es9Support);
     }
 
     return (
         <Stats title={`Client Environment stats (past ${days} days)`} stats={`client_environment_stats_${days}d.json`} anchor="client" onData={onData}>
             <GraphHeader title="Browser family" anchor="client_browser" />
             <StatPieChart data={browserTop10Data} nameKey="name" dataKey="count" id="browserTop10" />
-            <GraphHeader title="Browser ES8 support" anchor="client_es8" />
-            <StatPieChart data={es8SupportData} nameKey="name" dataKey="count" />
+            <GraphHeader title="Browser ES9 support" anchor="client_es9" />
+            <StatPieChart data={es9SupportData} nameKey="name" dataKey="count" />
             <GraphHeader title="Operating system" anchor="client_os" />
             <StatPieChart data={osTop10Data} nameKey="name" dataKey="count" id="osTop10" />
          </Stats>
