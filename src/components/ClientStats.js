@@ -7,28 +7,26 @@ import {useDays} from "./DaysProvider";
 
 const COUNT = 10;
 
-const ES6_COMPATIBLE = {
-    "Chrome": 51,
+const BROWSER_COMPATIBLE = {
+    "Chrome": 55,
+    "Chromium": 55,
+    "Chrome WebView": 55,
     "Firefox": 54,
     "Edge": 15,
-    "Safari": 10,
-    "Mobile Safari": 10,
-    "Opera": 38,
-    "Samsung Browser": 5,
-    "Chrome WebView": 101,
-    "Android Browser": 101,
-    "Waterfox": 54,
+    "Safari": 11,
+    "Mobile Safari": 11,
+    "Opera": 42,
+    "Samsung Browser": 6,
+    "QQBrowser": 13,
+
+    // definitely unsupported
     "IE": 1000,
-    "Opera Touch": 64,
-    "QQBrowser": 10,
-    "Chromium": 101,
-    "terminator": 0
 };
 
 export default function ClientStats(props) {
     const [ browserTop10Data, setBrowserTop10Data ] = useState([]);
     const [ osTop10Data, setOsTop10Data ] = useState([]);
-    const [ es6SupportData, setEs6SupportData ] = useState([]);
+    const [ es8SupportData, setEs8SupportData ] = useState([]);
 
     const {days} = useDays()
 
@@ -72,9 +70,9 @@ export default function ClientStats(props) {
             osTop10.push(otherOs);
         };
 
-        let es6Supported = 0;
-        let es6NotSupported = 0;
-        let es6Unknown = 0;
+        let browserSupported = 0;
+        let browserNotSupported = 0;
+        let browserSupportUnknown = 0;
         for (const version in d.browser_version) {
             const instances = d.browser_version[version].instances;
 
@@ -83,38 +81,38 @@ export default function ClientStats(props) {
                 const v_to_check = v.split(".")[0];
     
                 if (!d.browser[b]) {
-                    es6Unknown += instances;
+                    browserSupportUnknown += instances;
                     continue;
                 }
     
-                if (ES6_COMPATIBLE[b] === undefined) {
-                    es6Unknown += instances;
-                } else if (v_to_check >= ES6_COMPATIBLE[b]) {
-                    es6Supported += instances;
+                if (BROWSER_COMPATIBLE[b] === undefined) {
+                    browserSupportUnknown += instances;
+                } else if (v_to_check >= BROWSER_COMPATIBLE[b]) {
+                    browserSupported += instances;
                 } else {
-                    es6NotSupported += instances;
+                    browserNotSupported += instances;
                 }
             } catch (e) {
-                es6Unknown += instances;
+                browserSupportUnknown += instances;
             };
         }
-        let es6Support = [
-            { name: "ES6 supported", count: es6Supported },
-            { name: "ES6 unsupported", count: es6NotSupported },
-            { name: "Unknown ES6 support", count: es6Unknown }
+        let es8Support = [
+            { name: "ES8 supported", count: browserSupported },
+            { name: "ES8 unsupported", count: browserNotSupported },
+            { name: "Unknown ES8 support", count: browserSupportUnknown }
         ]
 
         setBrowserTop10Data(browserTop10);
         setOsTop10Data(osTop10);
-        setEs6SupportData(es6Support);
+        setEs8SupportData(es8Support);
     }
 
     return (
         <Stats title={`Client Environment stats (past ${days} days)`} stats={`client_environment_stats_${days}d.json`} anchor="client" onData={onData}>
             <GraphHeader title="Browser family" anchor="client_browser" />
             <StatPieChart data={browserTop10Data} nameKey="name" dataKey="count" id="browserTop10" />
-            <GraphHeader title="Browser ES6 support" anchor="client_es6" />
-            <StatPieChart data={es6SupportData} nameKey="name" dataKey="count" id="browserEs6Support" />
+            <GraphHeader title="Browser ES8 support" anchor="client_es8" />
+            <StatPieChart data={es8SupportData} nameKey="name" dataKey="count" />
             <GraphHeader title="Operating system" anchor="client_os" />
             <StatPieChart data={osTop10Data} nameKey="name" dataKey="count" id="osTop10" />
          </Stats>
