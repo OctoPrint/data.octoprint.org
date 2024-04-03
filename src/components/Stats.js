@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
-import CircularProgress from '@mui/material/CircularProgress';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
+import React, {useState, useEffect} from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import {useTheme} from "@mui/material/styles";
 
 import fetchStats from "../util/data";
-import { Typography } from "@mui/material";
+import {Typography} from "@mui/material";
 
 export default function Stats(props) {
-    const [ loading, setLoading ] = useState(true);
-    const [ since, setSince ] = useState();
-    const [ lastUpdate, setLastUpdate ] = useState();
+    const theme = useTheme();
+
+    const [loading, setLoading] = useState(true);
+    const [since, setSince] = useState();
+    const [lastUpdate, setLastUpdate] = useState();
 
     useEffect(() => {
         fetchStats(props.stats).then((data) => {
@@ -25,23 +28,33 @@ export default function Stats(props) {
     const Content = () => {
         if (loading) {
             return (
-                <div style={{ display: "flex", justifyContent: "center", }}>
+                <div style={{display: "flex", justifyContent: "center"}}>
                     <CircularProgress />
                 </div>
-            )
+            );
         } else {
             return (
                 <>
                     {props.children}
-                    <Typography variant="caption">Based on usage data from {since} until {lastUpdate}</Typography>
+                    <Typography variant="caption">
+                        Based on usage data from {since} until {lastUpdate}
+                    </Typography>
                 </>
-            )
+            );
         }
-    }
+    };
 
     return (
         <Card style={{}}>
-            <CardHeader title={props.title} titleTypographyProps={{ id: props.anchor }} />
+            <CardHeader
+                title={props.title}
+                titleTypographyProps={{
+                    id: props.anchor,
+                    style: {
+                        scrollMarginTop: theme.mixins.toolbar.minHeight + 40
+                    }
+                }}
+            />
             <CardContent>
                 <Content />
             </CardContent>
