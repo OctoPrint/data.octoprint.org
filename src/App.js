@@ -23,6 +23,7 @@ import AchievementStats from "./components/AchievementStats";
 
 import useLocalStorage from "./hooks/useLocalStorage";
 import DaysProvider from "./components/DaysProvider";
+import HashScroll from "./components/HashScroll";
 
 // We have a sticky AppBar, so offset the content by using the CSS applied to the toolbar
 const Offset = styled("div")(({theme}) => theme.mixins.toolbar);
@@ -45,11 +46,16 @@ export default function App(props) {
     };
 
     return (
-        <ThemeProvider theme={darkModeTheme}>
-            <DaysProvider>
-                <Main darkMode={darkMode} handleDarkModeToggle={handleDarkModeToggle} />
-            </DaysProvider>
-        </ThemeProvider>
+        <HashScroll>
+            <ThemeProvider theme={darkModeTheme}>
+                <DaysProvider>
+                    <Main
+                        darkMode={darkMode}
+                        handleDarkModeToggle={handleDarkModeToggle}
+                    />
+                </DaysProvider>
+            </ThemeProvider>
+        </HashScroll>
     );
 }
 
