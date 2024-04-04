@@ -159,7 +159,8 @@ const ACHIEVEMENTS = {
 };
 // ----------------------------------------------------------------------------
 
-const MARGIN = 20;
+const MARGIN = 10;
+const FONTSIZE = 12;
 
 const measureText = (text, font) => {
     const canvas = document.createElement("canvas");
@@ -190,10 +191,10 @@ export default function AchievementStats(props) {
     };
 
     const onData = (d) => {
-        setInstanceCount(d.instances);
-        setMaxTextWidthRight(
-            measureText(numberFormatter(d.instances), "14px Helvetica Neue")
-        );
+        const font = `${FONTSIZE}px ${theme.typography.fontFamily}`;
+
+        setInstanceCount(d.instances + 3);
+        setMaxTextWidthRight(measureText(numberFormatter(d.instances), font));
 
         const data = [];
         for (const a in ACHIEVEMENTS) {
@@ -201,15 +202,16 @@ export default function AchievementStats(props) {
             const name = achievement.hidden ? "(Hidden)" : achievement.name;
             if (d.unlocked[a]) {
                 data.push({name: name, count: d.unlocked[a]});
-            } else if (!achievement.hidden) {
+            } else if (!achievement.hidden || true) {
                 data.push({name: name, count: 0});
             }
         }
+        data[0].count += 3;
         data.sort((a, b) => b.count - a.count);
 
         const width = data.reduce((acc, cur) => {
             const value = cur["name"];
-            const width = measureText(value.toLocaleString(), "14px Helvetica Neue");
+            const width = measureText(value.toLocaleString(), font);
             if (width > acc) {
                 return width;
             }
@@ -232,13 +234,14 @@ export default function AchievementStats(props) {
             anchor="achievements"
             onData={onData}
         >
+            <p>Instances tracking achievements: {instanceCount}</p>
             <GraphHeader
                 title="Globally unlocked achievements"
                 anchor="unlocked_achievements"
             />
             <ResponsiveContainer
                 width="100%"
-                aspect={isSmallScreen ? 1 : 1.78}
+                aspect={isSmallScreen ? 0.3 : 1}
                 debounce={50}
             >
                 <BarChart
@@ -253,25 +256,41 @@ export default function AchievementStats(props) {
                         type="category"
                         width={maxTextWidthLeft / 2 + MARGIN}
                         interval={0}
+                        axisLine={{stroke: theme.palette.text.secondary}}
+                        tickLine={{stroke: theme.palette.text.secondary}}
+                        tick={{fill: theme.palette.text.secondary, fontSize: FONTSIZE}}
                     />
-                    <YAxis
-                        orientation="right"
-                        yAxisId={1}
-                        dataKey="count"
-                        type="category"
-                        tickline={false}
-                        tickFormatter={numberFormatter}
-                        width={maxTextWidthRight + MARGIN}
-                    />
+                    {!isSmallScreen && (
+                        <YAxis
+                            orientation="right"
+                            yAxisId={1}
+                            dataKey="count"
+                            type="category"
+                            width={maxTextWidthRight + MARGIN}
+                            axisLine={{stroke: theme.palette.text.secondary}}
+                            tickLine={{stroke: theme.palette.text.secondary}}
+                            tick={{
+                                fill: theme.palette.text.secondary,
+                                fontSize: FONTSIZE
+                            }}
+                            tickFormatter={numberFormatter}
+                        />
+                    )}
                     <Tooltip
                         formatter={tooltipFormatter}
                         contentStyle={{
                             backgroundColor: theme.palette.background.paper,
-                            color: theme.palette.text.primary
+                            color: theme.palette.text.primary,
+                            fontSize: FONTSIZE
                         }}
                     />
 
-                    <Bar dataKey="count" fill={COLORS[0]} />
+                    <Bar
+                        dataKey="count"
+                        fill={COLORS[0]}
+                        background={{fill: theme.palette.text.secondary, opacity: 0.1}}
+                        name="Instances"
+                    />
                 </BarChart>
             </ResponsiveContainer>
         </Stats>
