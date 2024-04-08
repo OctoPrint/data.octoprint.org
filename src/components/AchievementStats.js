@@ -193,7 +193,7 @@ export default function AchievementStats(props) {
     const onData = (d) => {
         const font = `${FONTSIZE}px ${theme.typography.fontFamily}`;
 
-        setInstanceCount(d.instances + 3);
+        setInstanceCount(d.instances);
         setMaxTextWidthRight(measureText(numberFormatter(d.instances), font));
 
         const data = [];
@@ -202,11 +202,10 @@ export default function AchievementStats(props) {
             const name = achievement.hidden ? "(Hidden)" : achievement.name;
             if (d.unlocked[a]) {
                 data.push({name: name, count: d.unlocked[a]});
-            } else if (!achievement.hidden || true) {
+            } else if (!achievement.hidden) {
                 data.push({name: name, count: 0});
             }
         }
-        data[0].count += 3;
         data.sort((a, b) => b.count - a.count);
 
         const width = data.reduce((acc, cur) => {
