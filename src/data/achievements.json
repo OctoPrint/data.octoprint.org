@@ -1,0 +1,182 @@
+{
+"achievement_not_found": {
+    "name": "Achievement Not Found",
+    "description": "Reach a total print duration of 404 hours",
+    "hidden": true
+},
+"adventurer": {
+    "name": "The Adventurer",
+    "description": "Install a plugin.",
+    "hidden": false
+},
+"all_beginnings_are_hard": {
+    "name": "All Beginnings Are Hard",
+    "description": "Cancel your first print.",
+    "hidden": false
+},
+"better_safe_than_sorry": {
+    "name": "Better Safe Than Sorry",
+    "description": "Create a backup.",
+    "hidden": false
+},
+"cant_get_enough": {
+    "name": "Can't Get Enough",
+    "description": "Finish 10 prints in one day.",
+    "hidden": false
+},
+"clean_house_i": {
+    "name": "Clean House",
+    "description": "Delete 100 files.",
+    "hidden": true
+},
+"clean_house_ii": {
+    "name": "Clean House II",
+    "description": "Delete 500 files.",
+    "hidden": true
+},
+"clean_house_iii": {
+    "name": "Clean House III",
+    "description": "Delete 1000 files.",
+    "hidden": true
+},
+"crossover_episode": {
+    "name": "What Is This, A Crossover Episode?",
+    "description": "Connect to a printer running Klipper.",
+    "hidden": true
+},
+"early_bird": {
+    "name": "Early Bird",
+    "description": "Start a print between 03:00 and 07:00.",
+    "hidden": true
+},
+"half_marathon": {
+    "name": "Half Marathon",
+    "description": "Finish a print that took longer than 12 hours.",
+    "hidden": false
+},
+"hang_in_there": {
+    "name": "Hang In There!",
+    "description": "Pause the same print ten times.",
+    "hidden": true
+},
+"happy_birthday_foosel": {
+    "name": "Happy Birthday, foosel",
+    "description": "Start a print on foosel's birthday, March 21st.",
+    "hidden": true
+},
+"happy_birthday_octoprint": {
+    "name": "Happy Birthday, OctoPrint",
+    "description": "Start a print on OctoPrint's birthday, December 25th.",
+    "hidden": true
+},
+"heavy_chonker": {
+    "name": "Heavy Chonker",
+    "description": "Upload a GCODE file larger than 500MB.",
+    "hidden": false
+},
+"marathon": {
+    "name": "Marathon",
+    "description": "Finish a print that took longer than 24 hours.",
+    "hidden": false
+},
+"mass_production": {
+    "name": "Mass Production",
+    "description": "Finish a print of the same file five times in a row.",
+    "hidden": true
+},
+"night_owl": {
+    "name": "Night Owl",
+    "description": "Start a print between 23:00 and 03:00.",
+    "hidden": true
+},
+"one_of_those_days": {
+    "name": "Must Be One Of Those Days",
+    "description": "Cancel ten consecutive prints on the same day.",
+    "hidden": true
+},
+"one_small_step_for_man": {
+    "name": "That's One Small Step For Man",
+    "description": "Finish your first print.",
+    "hidden": false
+},
+"santas_little_helper": {
+    "name": "Santa's Little Helper",
+    "description": "Start a print between December 1st and December 24th.",
+    "hidden": true
+},
+"so_close": {
+    "name": "So Close",
+    "description": "Cancel a print job at 95% progress or more.",
+    "hidden": true
+},
+"spooky": {
+    "name": "Spooky",
+    "description": "Start a print on Halloween, October 31st.",
+    "hidden": true
+},
+"sprint": {
+    "name": "Sprint",
+    "description": "Finish a print that took less than 10 minutes.",
+    "hidden": false
+},
+"tgif": {
+    "name": "TGIF",
+    "description": "Start a print on a Friday.",
+    "hidden": false
+},
+"the_collector_i": {
+    "name": "The Collector",
+    "description": "Upload 100 files.",
+    "hidden": true
+},
+"the_collector_ii": {
+    "name": "The Collector II",
+    "description": "Upload 500 files.",
+    "hidden": true
+},
+"the_collector_iii": {
+    "name": "The Collector III",
+    "description": "Upload 1000 files.",
+    "hidden": true
+},
+"the_manufacturer_i": {
+    "name": "The Manufacturer",
+    "description": "Finish 10 prints.",
+    "hidden": false
+},
+"the_manufacturer_ii": {
+    "name": "The Manufacturer II",
+    "description": "Finish 100 prints.",
+    "hidden": true
+},
+"the_manufacturer_iii": {
+    "name": "The Manufacturer III",
+    "description": "Finish 1000 prints.",
+    "hidden": true
+},
+"the_organizer": {
+    "name": "The Organizer",
+    "description": "Create a folder.",
+    "hidden": true
+},
+"the_wizard": {
+    "name": "The Wizard",
+    "description": "Complete the first run setup wizard.",
+    "hidden": false
+},
+"tinkerer": {
+    "name": "The Tinkerer",
+    "description": "Install a plugin from a URL.",
+    "hidden": false
+},
+"weekend_warrior": {
+    "name": "Weekend Warrior",
+    "description": "Start prints on four consecutive weekends.",
+    "hidden": false
+},
+"what_could_possibly_go_wrong": {
+    "name": "What Could Possibly Go Wrong?",
+    "description": "Start a print with an active undervoltage issue.",
+    "hidden": true
+}
+}

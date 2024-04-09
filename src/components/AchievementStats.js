@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {FormControlLabel, Checkbox} from "@mui/material";
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip} from "recharts";
 
 import GraphHeader from "./GraphHeader";
@@ -9,155 +10,8 @@ import Stats from "./Stats";
 import {useDays} from "./DaysProvider";
 import {COLORS, countFormatter} from "../util/charts";
 
-// ----------------------------------------------------------------------------
 // keep in sync via `python src/octoprint/plugins/achievements/achievements.py`
-const ACHIEVEMENTS = {
-    achievement_not_found: {
-        name: "Achievement Not Found",
-        hidden: true
-    },
-    adventurer: {
-        name: "The Adventurer",
-        hidden: false
-    },
-    all_beginnings_are_hard: {
-        name: "All Beginnings Are Hard",
-        hidden: false
-    },
-    better_safe_than_sorry: {
-        name: "Better Safe Than Sorry",
-        hidden: false
-    },
-    cant_get_enough: {
-        name: "Can't Get Enough",
-        hidden: false
-    },
-    clean_house_i: {
-        name: "Clean House",
-        hidden: true
-    },
-    clean_house_ii: {
-        name: "Clean House II",
-        hidden: true
-    },
-    clean_house_iii: {
-        name: "Clean House III",
-        hidden: true
-    },
-    crossover_episode: {
-        name: "What Is This, A Crossover Episode?",
-        hidden: true
-    },
-    early_bird: {
-        name: "Early Bird",
-        hidden: true
-    },
-    half_marathon: {
-        name: "Half Marathon",
-        hidden: false
-    },
-    hang_in_there: {
-        name: "Hang In There!",
-        hidden: true
-    },
-    happy_birthday_foosel: {
-        name: "Happy Birthday, foosel",
-        hidden: true
-    },
-    happy_birthday_octoprint: {
-        name: "Happy Birthday, OctoPrint",
-        hidden: true
-    },
-    heavy_chonker: {
-        name: "Heavy Chonker",
-        hidden: false
-    },
-    marathon: {
-        name: "Marathon",
-        hidden: false
-    },
-    mass_production: {
-        name: "Mass Production",
-        hidden: true
-    },
-    night_owl: {
-        name: "Night Owl",
-        hidden: true
-    },
-    one_of_those_days: {
-        name: "Must Be One Of Those Days",
-        hidden: true
-    },
-    one_small_step_for_man: {
-        name: "That's One Small Step For Man",
-        hidden: false
-    },
-    santas_little_helper: {
-        name: "Santa's Little Helper",
-        hidden: true
-    },
-    so_close: {
-        name: "So Close",
-        hidden: true
-    },
-    spooky: {
-        name: "Spooky",
-        hidden: true
-    },
-    sprint: {
-        name: "Sprint",
-        hidden: false
-    },
-    tgif: {
-        name: "TGIF",
-        hidden: false
-    },
-    the_collector_i: {
-        name: "The Collector",
-        hidden: true
-    },
-    the_collector_ii: {
-        name: "The Collector II",
-        hidden: true
-    },
-    the_collector_iii: {
-        name: "The Collector III",
-        hidden: true
-    },
-    the_manufacturer_i: {
-        name: "The Manufacturer",
-        hidden: false
-    },
-    the_manufacturer_ii: {
-        name: "The Manufacturer II",
-        hidden: true
-    },
-    the_manufacturer_iii: {
-        name: "The Manufacturer III",
-        hidden: true
-    },
-    the_organizer: {
-        name: "The Organizer",
-        hidden: true
-    },
-    the_wizard: {
-        name: "The Wizard",
-        hidden: false
-    },
-    tinkerer: {
-        name: "The Tinkerer",
-        hidden: false
-    },
-    weekend_warrior: {
-        name: "Weekend Warrior",
-        hidden: false
-    },
-    what_could_possibly_go_wrong: {
-        name: "What Could Possibly Go Wrong?",
-        hidden: true
-    }
-};
-// ----------------------------------------------------------------------------
+import ACHIEVEMENTS from "../data/achievements.json";
 
 const MARGIN = 10;
 const FONTSIZE = 12;
@@ -170,10 +24,15 @@ const measureText = (text, font) => {
 };
 
 export default function AchievementStats(props) {
+    const [stats, setStats] = useState({});
+
     const [instanceCount, setInstanceCount] = useState(0);
     const [achievementData, setAchievementData] = useState([]);
+
     const [maxTextWidthLeft, setMaxTextWidthLeft] = useState(0);
     const [maxTextWidthRight, setMaxTextWidthRight] = useState(0);
+
+    const [spoiler, setSpoiler] = useState(false);
 
     const {days} = useDays();
 
@@ -186,22 +45,63 @@ export default function AchievementStats(props) {
         );
     };
 
-    const tooltipFormatter = (value, name, props) => {
-        return [numberFormatter(value), name];
+    const getDescriptionOf = (label) => {
+        if (label === "(Hidden)") return "This achievement is hidden.";
+
+        for (const a in ACHIEVEMENTS) {
+            const achievement = ACHIEVEMENTS[a];
+            if (label === achievement.name || label === `${achievement.name}*`)
+                return achievement.description;
+        }
+        return "";
+    };
+
+    const AchievementTooltip = ({active, payload, label}) => {
+        if (active && payload && payload.length) {
+            return (
+                <div
+                    className="achievement-tooltip"
+                    style={{
+                        backgroundColor: theme.palette.background.paper,
+                        color: theme.palette.text.primary,
+                        fontSize: FONTSIZE,
+                        padding: "0 10px",
+                        border: "1px solid white"
+                    }}
+                >
+                    <p className="label">
+                        <strong>
+                            {label}: {numberFormatter(payload[0].value)}
+                        </strong>
+                    </p>
+                    <p className="desc">{getDescriptionOf(label)}</p>
+                </div>
+            );
+        }
+        return null;
     };
 
     const onData = (d) => {
+        setStats(d);
+    };
+
+    useEffect(() => {
+        if (stats.instances === undefined || stats.unlocked === undefined) return;
+
         const font = `${FONTSIZE}px ${theme.typography.fontFamily}`;
 
-        setInstanceCount(d.instances);
-        setMaxTextWidthRight(measureText(numberFormatter(d.instances), font));
+        setInstanceCount(stats.instances);
+        setMaxTextWidthRight(measureText(numberFormatter(stats.instances), font));
 
         const data = [];
         for (const a in ACHIEVEMENTS) {
             const achievement = ACHIEVEMENTS[a];
-            const name = achievement.hidden ? "(Hidden)" : achievement.name;
-            if (d.unlocked[a]) {
-                data.push({name: name, count: d.unlocked[a]});
+            const name =
+                achievement.hidden && !spoiler
+                    ? "(Hidden)"
+                    : `${achievement.name}${achievement.hidden ? "*" : ""}`;
+            if (stats.unlocked[a]) {
+                data.push({name: name, count: stats.unlocked[a]});
             } else if (!achievement.hidden) {
                 data.push({name: name, count: 0});
             }
@@ -220,7 +120,7 @@ export default function AchievementStats(props) {
 
         setAchievementData(data);
         console.log("Achievement data", data);
-    };
+    }, [stats, spoiler]);
 
     const theme = useTheme();
 
@@ -253,7 +153,7 @@ export default function AchievementStats(props) {
                         yAxisId={0}
                         dataKey="name"
                         type="category"
-                        width={maxTextWidthLeft / 2 + MARGIN}
+                        width={maxTextWidthLeft / 2 + 2 * MARGIN}
                         interval={0}
                         axisLine={{stroke: theme.palette.text.secondary}}
                         tickLine={{stroke: theme.palette.text.secondary}}
@@ -265,7 +165,7 @@ export default function AchievementStats(props) {
                             yAxisId={1}
                             dataKey="count"
                             type="category"
-                            width={maxTextWidthRight + MARGIN}
+                            width={maxTextWidthRight + 2 * MARGIN}
                             axisLine={{stroke: theme.palette.text.secondary}}
                             tickLine={{stroke: theme.palette.text.secondary}}
                             tick={{
@@ -276,7 +176,7 @@ export default function AchievementStats(props) {
                         />
                     )}
                     <Tooltip
-                        formatter={tooltipFormatter}
+                        content={<AchievementTooltip />}
                         contentStyle={{
                             backgroundColor: theme.palette.background.paper,
                             color: theme.palette.text.primary,
@@ -292,6 +192,18 @@ export default function AchievementStats(props) {
                     />
                 </BarChart>
             </ResponsiveContainer>
+            <p>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={spoiler}
+                            onChange={(e) => setSpoiler(e.target.checked)}
+                            color="primary"
+                        />
+                    }
+                    label="Show hidden achievements"
+                />
+            </p>
         </Stats>
     );
 }
