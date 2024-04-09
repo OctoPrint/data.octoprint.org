@@ -16,6 +16,9 @@ import ACHIEVEMENTS from "../data/achievements.json";
 const MARGIN = 10;
 const FONTSIZE = 12;
 
+const numberFormatter = (value, total) =>
+    countFormatter(value) + " (" + Math.floor((value / total) * 100) + "%)";
+
 const measureText = (text, font) => {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
@@ -35,15 +38,8 @@ export default function AchievementStats(props) {
     const [spoiler, setSpoiler] = useState(false);
 
     const {days} = useDays();
-
-    const numberFormatter = (value) => {
-        return (
-            countFormatter(value) +
-            " (" +
-            Math.floor((value / instanceCount) * 100) +
-            "%)"
-        );
-    };
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const getDescriptionOf = (label) => {
         if (label === "(Hidden)") return "This achievement is hidden.";
@@ -71,7 +67,7 @@ export default function AchievementStats(props) {
                 >
                     <p className="label">
                         <strong>
-                            {label}: {numberFormatter(payload[0].value)}
+                            {label}: {numberFormatter(payload[0].value, instanceCount)}
                         </strong>
                     </p>
                     <p className="desc">{getDescriptionOf(label)}</p>
@@ -91,7 +87,9 @@ export default function AchievementStats(props) {
         const font = `${FONTSIZE}px ${theme.typography.fontFamily}`;
 
         setInstanceCount(stats.instances);
-        setMaxTextWidthRight(measureText(numberFormatter(stats.instances), font));
+        setMaxTextWidthRight(
+            measureText(numberFormatter(stats.instances, stats.instances), font)
+        );
 
         const data = [];
         for (const a in ACHIEVEMENTS) {
@@ -120,11 +118,7 @@ export default function AchievementStats(props) {
 
         setAchievementData(data);
         console.log("Achievement data", data);
-    }, [stats, spoiler]);
-
-    const theme = useTheme();
-
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
+    }, [stats, spoiler, theme.typography.fontFamily]);
 
     return (
         <Stats
@@ -172,7 +166,7 @@ export default function AchievementStats(props) {
                                 fill: theme.palette.text.secondary,
                                 fontSize: FONTSIZE
                             }}
-                            tickFormatter={numberFormatter}
+                            tickFormatter={(v) => numberFormatter(v, instanceCount)}
                         />
                     )}
                     <Tooltip
