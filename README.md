@@ -13,11 +13,11 @@ Install dependencies:
 
 Start development server:
 
-    $ npm start 
+    $ npm run dev
 
 Create production build:
 
-    $npm build
+    $ npm run build
 
 ## Deployment
 
