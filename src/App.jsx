@@ -14,6 +14,9 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 import DarkModeToggle from "./components/DarkModeToggle";
 import DaysToggle from "./components/DaysToggle";
@@ -68,6 +71,7 @@ function Main({darkMode, handleDarkModeToggle}) {
     const theme = useTheme();
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
 
     const year = new Date().getFullYear();
 
@@ -82,8 +86,12 @@ function Main({darkMode, handleDarkModeToggle}) {
         {name: "Achievement Stats", link: "#achievements"}
     ];
 
+    const toggleDrawer = (newOpen) => () => {
+        setDrawerOpen(newOpen);
+    };
+
     const DrawerList = (
-        <Box sx={{width: 250}} role="presentation">
+        <Box sx={{width: 250}} role="presentation" onClick={toggleDrawer(false)}>
             <List>
                 {NavItems.map((item, index) => (
                     <ListItem key={"drawer-item-" + index} disablePadding>
@@ -100,6 +108,15 @@ function Main({darkMode, handleDarkModeToggle}) {
         return (
             <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
                 <Toolbar sx={{flexWrap: "wrap"}}>
+                    <Tooltip title="Open drawer">
+                        <IconButton
+                            onClick={toggleDrawer(true)}
+                            color="inherit"
+                            size="large"
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Box display="flex" flexGrow={1}>
                         {!isSmallScreen ? "data.octoprint.org" : " "}
                     </Box>
@@ -115,7 +132,7 @@ function Main({darkMode, handleDarkModeToggle}) {
             <CssBaseline />
             <Navbar />
             {!isSmallScreen && (
-                <Drawer variant="permanent">
+                <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
                     <Offset />
                     {DrawerList}
                 </Drawer>
